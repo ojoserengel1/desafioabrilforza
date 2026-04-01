@@ -859,18 +859,7 @@ i[data-lucide] svg { display: block; }
   letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted);
 }
 
-/* ════════════════════════════════════════════════════
-   STAGGER — transition-based (JS adds .in class)
-════════════════════════════════════════════════════ */
-.stagger {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
-}
-.stagger.in {
-  opacity: 1;
-  transform: none;
-}
+/* stagger classes are no-ops — content always visible */
 
 /* ════════════════════════════════════════════════════
    RESPONSIVE
@@ -1481,26 +1470,17 @@ i[data-lucide] svg { display: block; }
     orb.classList.add(ORB_MAP[key] || 'scene-orb-dark');
   }
 
-  function staggerIn(slide) {
-    const items = slide.querySelectorAll('.stagger');
-    items.forEach(el => el.classList.remove('in'));
-    items.forEach((el, i) => {
-      setTimeout(() => el.classList.add('in'), 40 + i * 70);
-    });
-  }
-
   function goTo(n) {
     if (n === current || n < 0 || n >= total) return;
     const dir = n > current ? 'left' : 'right';
 
     slides[current].classList.remove('active');
     slides[current].classList.add('exit-' + dir);
-    setTimeout(() => slides[current].classList.remove('exit-' + dir), 550);
+    setTimeout(() => slides[current].classList.remove('exit-' + dir), 450);
 
     current = n;
     slides[current].classList.add('active');
     setOrb(slides[current]);
-    staggerIn(slides[current]);
 
     document.querySelectorAll('.nav-dot').forEach((d, i) => {
       d.className = 'nav-dot' + (i === current ? ' active' : '');
@@ -1522,10 +1502,8 @@ i[data-lucide] svg { display: block; }
     if (Math.abs(d) > 48) changeSlide(d > 0 ? 1 : -1);
   });
 
-  // init icons + set first orb
   lucide.createIcons();
   setOrb(slides[0]);
-  staggerIn(slides[0]);
 </script>
 </body>
 </html>
