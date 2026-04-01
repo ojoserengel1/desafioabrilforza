@@ -860,27 +860,16 @@ i[data-lucide] svg { display: block; }
 }
 
 /* ════════════════════════════════════════════════════
-   STAGGER ANIMATIONS
+   STAGGER — transition-based (JS adds .in class)
 ════════════════════════════════════════════════════ */
-.slide.active .stagger {
-  animation: staggerIn 0.55s var(--ease-out) forwards;
-  opacity: 0; transform: translateY(16px);
+.stagger {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
 }
-.slide.active .stagger:nth-child(1) { animation-delay: 0.04s; }
-.slide.active .stagger:nth-child(2) { animation-delay: 0.11s; }
-.slide.active .stagger:nth-child(3) { animation-delay: 0.18s; }
-.slide.active .stagger:nth-child(4) { animation-delay: 0.25s; }
-.slide.active .stagger:nth-child(5) { animation-delay: 0.32s; }
-.slide.active .stagger:nth-child(6) { animation-delay: 0.39s; }
-.slide.active .stagger:nth-child(7) { animation-delay: 0.46s; }
-.slide.active .stagger:nth-child(8) { animation-delay: 0.53s; }
-@keyframes staggerIn { to { opacity: 1; transform: translateY(0); } }
-
-/* Reset helper — force browser to discard cached animation state */
-.slide.active .stagger.no-anim {
-  animation: none !important;
-  opacity: 0 !important;
-  transform: translateY(16px) !important;
+.stagger.in {
+  opacity: 1;
+  transform: none;
 }
 
 /* ════════════════════════════════════════════════════
@@ -1492,6 +1481,14 @@ i[data-lucide] svg { display: block; }
     orb.classList.add(ORB_MAP[key] || 'scene-orb-dark');
   }
 
+  function staggerIn(slide) {
+    const items = slide.querySelectorAll('.stagger');
+    items.forEach(el => el.classList.remove('in'));
+    items.forEach((el, i) => {
+      setTimeout(() => el.classList.add('in'), 40 + i * 70);
+    });
+  }
+
   function goTo(n) {
     if (n === current || n < 0 || n >= total) return;
     const dir = n > current ? 'left' : 'right';
@@ -1500,29 +1497,10 @@ i[data-lucide] svg { display: block; }
     slides[current].classList.add('exit-' + dir);
     setTimeout(() => slides[current].classList.remove('exit-' + dir), 550);
 
-    // Pin elements invisible via inline style (overrides any CSS, any fill-mode)
-    const targets = slides[n].querySelectorAll('.stagger');
-    targets.forEach(el => {
-      el.style.animation = 'none';
-      el.style.opacity   = '0';
-      el.style.transform = 'translateY(16px)';
-    });
-
     current = n;
     slides[current].classList.add('active');
     setOrb(slides[current]);
-
-    // Double-rAF: first frame commits the "none" paint,
-    // second frame releases inline → CSS animation starts fresh
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        targets.forEach(el => {
-          el.style.animation = '';
-          el.style.opacity   = '';
-          el.style.transform = '';
-        });
-      });
-    });
+    staggerIn(slides[current]);
 
     document.querySelectorAll('.nav-dot').forEach((d, i) => {
       d.className = 'nav-dot' + (i === current ? ' active' : '');
@@ -1547,6 +1525,7 @@ i[data-lucide] svg { display: block; }
   // init icons + set first orb
   lucide.createIcons();
   setOrb(slides[0]);
+  staggerIn(slides[0]);
 </script>
 </body>
 </html>
