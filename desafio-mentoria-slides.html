@@ -6,481 +6,1021 @@
 <title>Desafio Mentoria Paga em 30 Dias — Forza Club</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <style>
-/* ════════════════════════════════════════
-   FORZA CLUB — TOKENS
-════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════
+   TOKENS
+════════════════════════════════════════════════════ */
 :root {
-  --bg-deep:          #0c0a07;
-  --bg-base:          #150e0b;
-  --bg-raised:        #1e1410;
-  --bg-overlay:       #2a1c15;
-  --bg-hover:         #33211a;
-  --border-subtle:    rgba(255,255,255,0.06);
-  --border-brown:     rgba(107,50,40,0.3);
+  --bg:              #070503;
+  --surface-0:       #0d0905;
+  --surface-1:       #181008;
+  --surface-2:       #221508;
+  --surface-3:       #2e1c0d;
+  --surface-4:       #3a2412;
 
-  --gold:             #ffc83c;
-  --gold-dark:        #b07d00;
-  --gold-dim:         rgba(255,200,60,0.15);
-  --gold-glow:        rgba(255,200,60,0.35);
+  --gold-light:      #ffe080;
+  --gold:            #ffc83c;
+  --gold-mid:        #c8961e;
+  --gold-dark:       #8a6010;
+  --gold-deep:       #4a3208;
 
-  --red:              #ff4040;
-  --red-soft:         #ff6b6b;
-  --red-glow:         rgba(255,64,64,0.3);
+  --bronze-light:    #e8a060;
+  --bronze:          #b46030;
+  --bronze-dark:     #7a3a18;
 
-  --brown-900:        #1a0d08;
-  --brown-800:        #2e1a18;
-  --brown-700:        #4a2620;
-  --brown-600:        #6b3228;
-  --brown-500:        #8c3e30;
-  --brown-400:        #a85040;
-  --brown-300:        #c46858;
-  --brown-200:        #d9957f;
-  --brown-100:        #eec4b5;
+  --red:             #ff4040;
+  --red-soft:        #ff6b6b;
+  --red-deep:        #4a1010;
 
-  --text-primary:     #f0ebe8;
-  --text-secondary:   #8c7d73;
-  --text-muted:       #6b5e53;
+  --brown-300:       #c46858;
+  --brown-200:       #d9957f;
+  --brown-100:       #eec4b5;
 
-  --font-display:     'Bebas Neue', sans-serif;
-  --font-body:        'DM Sans', sans-serif;
-  --font-mono:        'DM Mono', monospace;
+  --text-bright:     #f8f0e0;
+  --text-main:       #e8dcc8;
+  --text-sub:        #9a8870;
+  --text-muted:      #6a5840;
 
-  --ease-out:         cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-ui:          cubic-bezier(0.4, 0, 0.2, 1);
+  --font-display:    'Bebas Neue', sans-serif;
+  --font-body:       'DM Sans', sans-serif;
+  --font-mono:       'DM Mono', monospace;
+
+  /* metallic gradient shortcuts */
+  --metal-gold: linear-gradient(170deg,
+    #f0e060 0%, #ffc83c 18%, #c8961e 32%,
+    #ffe890 48%, #c89020 62%, #ffc83c 78%, #f0d050 100%);
+  --metal-bronze: linear-gradient(170deg,
+    #d4a060 0%, #b06030 20%, #e8b870 40%,
+    #9a5028 60%, #d0904a 80%, #b06030 100%);
+  --metal-silver: linear-gradient(170deg,
+    #d0c8b8 0%, #a09080 20%, #e0d8c8 45%,
+    #9a9080 65%, #d0c8b8 100%);
+
+  --ease-out:        cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-ui:         cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* ════════════════════════════════════════════════════
+   RESET
+════════════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
   width: 100%; height: 100%;
   overflow: hidden;
-  background: var(--bg-deep);
-  color: var(--text-primary);
+  background: var(--bg);
+  color: var(--text-main);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
 
-/* ─── LUCIDE ICONS ─── */
-i[data-lucide] {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-}
-i[data-lucide] svg { display: block; }
+/* ════════════════════════════════════════════════════
+   BACKGROUND LAYERS
+════════════════════════════════════════════════════ */
 
-/* ─── FUNDO ─── */
-.bg-texture {
+/* Base atmospheric */
+.bg-atmo {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background-image:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(46,26,24,0.9) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 90%, rgba(107,50,40,0.2) 0%, transparent 50%),
-    radial-gradient(ellipse 40% 30% at 10% 80%, rgba(26,13,8,0.6) 0%, transparent 50%);
+  background:
+    radial-gradient(ellipse 100% 60% at 50% -5%,  rgba(80,45,10,0.55) 0%, transparent 65%),
+    radial-gradient(ellipse 60%  60% at 0%   100%, rgba(40,20,5,0.7)  0%, transparent 55%),
+    radial-gradient(ellipse 60%  60% at 100% 100%, rgba(30,15,5,0.6)  0%, transparent 55%),
+    linear-gradient(180deg, #0e0a04 0%, #070503 100%);
 }
 
+/* SVG grain texture */
 .bg-grain {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
 }
 
-.ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-.orb { position: absolute; border-radius: 50%; filter: blur(130px); }
-.orb-1 { width: 600px; height: 600px; background: var(--brown-800); top: -15%; right: -10%; opacity: 0.5; }
-.orb-2 { width: 400px; height: 400px; background: var(--brown-900); bottom: -15%; left: -8%; opacity: 0.7; }
-.orb-3 { width: 250px; height: 250px; background: rgba(255,200,60,0.08); top: 40%; left: 50%; transform: translate(-50%,-50%); }
+/* Horizontal scanlines */
+.bg-lines {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.018;
+  background-image: repeating-linear-gradient(
+    0deg, rgba(255,200,60,0.8) 0px, rgba(255,200,60,0.8) 1px, transparent 1px, transparent 3px
+  );
+}
 
-/* ─── SLIDE ENGINE ─── */
+/* Vignette */
+.bg-vignette {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 90% 85% at 50% 50%, transparent 35%, rgba(4,2,1,0.75) 100%);
+}
+
+/* Per-slide color orbs — controlled via JS class swap */
+.scene-orb {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  transition: opacity 0.7s var(--ease-out);
+}
+.scene-orb-gold   { background: radial-gradient(ellipse 55% 45% at 50% 50%, rgba(255,200,60,0.10) 0%, transparent 70%); }
+.scene-orb-red    { background: radial-gradient(ellipse 55% 45% at 50% 50%, rgba(255,60,60,0.09)  0%, transparent 70%); }
+.scene-orb-bronze { background: radial-gradient(ellipse 55% 45% at 50% 50%, rgba(180,90,40,0.10) 0%, transparent 70%); }
+.scene-orb-dark   { background: radial-gradient(ellipse 55% 45% at 50% 50%, rgba(60,30,10,0.15)  0%, transparent 70%); }
+
+/* ════════════════════════════════════════════════════
+   SLIDE ENGINE
+════════════════════════════════════════════════════ */
 .slides-wrapper { position: relative; width: 100%; height: 100%; z-index: 1; }
 
 .slide {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  padding: 48px 40px 100px;
+  padding: 44px 40px 96px;
   opacity: 0;
-  transform: scale(0.96) translateY(18px);
+  transform: scale(0.96) translateY(22px);
   pointer-events: none;
-  transition: opacity 0.5s var(--ease-ui), transform 0.5s var(--ease-ui);
+  transition: opacity 0.55s var(--ease-ui), transform 0.55s var(--ease-ui);
 }
-.slide.active { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
-.slide.exit-left  { opacity: 0; transform: scale(0.93) translateX(-56px); }
-.slide.exit-right { opacity: 0; transform: scale(0.93) translateX(56px); }
+.slide.active   { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+.slide.exit-left  { opacity: 0; transform: scale(0.93) translateX(-64px) rotate(-0.5deg); }
+.slide.exit-right { opacity: 0; transform: scale(0.93) translateX( 64px) rotate( 0.5deg); }
 
 .slide-inner { max-width: 1100px; width: 100%; text-align: center; }
 
-/* ─── NAV ─── */
+/* ════════════════════════════════════════════════════
+   LUCIDE ICONS
+════════════════════════════════════════════════════ */
+i[data-lucide] { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; }
+i[data-lucide] svg { display: block; }
+
+/* ════════════════════════════════════════════════════
+   METALLIC TEXT UTILITY
+════════════════════════════════════════════════════ */
+.t-gold {
+  background-image: var(--metal-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.t-bronze {
+  background-image: var(--metal-bronze);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.t-silver {
+  background-image: var(--metal-silver);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+
+/* ════════════════════════════════════════════════════
+   DECORATIVE ORNAMENTS
+════════════════════════════════════════════════════ */
+.orn-row {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin: 6px 0;
+}
+.orn-line {
+  height: 1px; flex: 1; max-width: 120px;
+  background: linear-gradient(90deg, transparent, rgba(255,200,60,0.35), transparent);
+}
+.orn-line.r { background: linear-gradient(90deg, rgba(255,200,60,0.35), transparent); }
+.orn-line.l { background: linear-gradient(90deg, transparent, rgba(255,200,60,0.35)); }
+.orn-gem {
+  font-size: 7px; color: var(--gold-mid); letter-spacing: 5px;
+  font-family: var(--font-mono); opacity: 0.7;
+}
+.orn-divider {
+  display: flex; align-items: center; gap: 8px;
+  justify-content: center; margin: 14px auto;
+}
+.orn-divider-line { width: 40px; height: 1px; background: rgba(255,200,60,0.2); }
+.orn-divider-center { color: var(--gold-mid); font-size: 6px; opacity: 0.6; letter-spacing: 4px; }
+
+/* Five stars */
+.star-row {
+  display: flex; gap: 8px; justify-content: center; align-items: center;
+  margin: 8px 0;
+}
+.star-row svg { width: 10px; height: 10px; color: var(--gold-mid); opacity: 0.5; }
+.star-row svg.lit { color: var(--gold); opacity: 0.9; }
+
+/* Corner brackets */
+.corner-frame { position: relative; }
+.corner-frame::before, .corner-frame::after,
+.corner-tl, .corner-tr, .corner-bl, .corner-br {
+  position: absolute; width: 16px; height: 16px;
+  border-color: rgba(255,200,60,0.28); border-style: solid;
+}
+.corner-tl { top: 0; left: 0; border-width: 1px 0 0 1px; }
+.corner-tr { top: 0; right: 0; border-width: 1px 1px 0 0; }
+.corner-bl { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
+.corner-br { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+
+/* ════════════════════════════════════════════════════
+   SLIDE BADGE
+════════════════════════════════════════════════════ */
+.slide-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 18px 5px 14px; border-radius: 100px;
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  margin-bottom: 16px; font-weight: 500;
+  position: relative;
+}
+.slide-badge::before {
+  content: ''; position: absolute; inset: 0; border-radius: 100px;
+  background: linear-gradient(90deg, rgba(255,200,60,0.04), transparent);
+}
+.slide-badge i[data-lucide] svg { width: 11px; height: 11px; }
+
+.badge-gold {
+  background: rgba(255,200,60,0.06);
+  border: 1px solid rgba(255,200,60,0.22);
+  color: var(--gold);
+  box-shadow: 0 0 12px rgba(255,200,60,0.08), inset 0 1px 0 rgba(255,220,80,0.1);
+}
+.badge-red {
+  background: rgba(255,64,64,0.07);
+  border: 1px solid rgba(255,64,64,0.22);
+  color: var(--red-soft);
+}
+.badge-brown {
+  background: rgba(107,50,40,0.2);
+  border: 1px solid rgba(180,100,60,0.25);
+  color: var(--brown-200);
+}
+.badge-amber {
+  background: rgba(168,80,64,0.12);
+  border: 1px solid rgba(168,80,64,0.28);
+  color: var(--brown-100);
+}
+
+/* ════════════════════════════════════════════════════
+   TYPOGRAPHY
+════════════════════════════════════════════════════ */
+.slide-title {
+  font-family: var(--font-display); letter-spacing: 0.06em;
+  line-height: 0.92; margin-bottom: 14px;
+}
+
+.slide-subtitle {
+  font-size: 16px; font-weight: 400;
+  color: var(--text-sub); max-width: 520px;
+  margin: 0 auto 32px; line-height: 1.68;
+}
+
+/* watermark phase number */
+.phase-watermark {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display); font-size: clamp(180px, 30vw, 280px);
+  letter-spacing: 0.04em; line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,200,60,0.05);
+  text-stroke: 1px rgba(255,200,60,0.05);
+  pointer-events: none; user-select: none;
+  z-index: -1;
+}
+
+/* ════════════════════════════════════════════════════
+   PANEL SURFACE (metal card effect)
+════════════════════════════════════════════════════ */
+.panel {
+  background:
+    linear-gradient(170deg, rgba(255,200,60,0.05) 0%, transparent 35%),
+    linear-gradient(0deg, rgba(0,0,0,0.35) 0%, transparent 60%),
+    var(--surface-1);
+  border: 1px solid rgba(255,200,60,0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255,220,80,0.09),
+    inset 0 -1px 0 rgba(0,0,0,0.55),
+    inset 1px 0 0 rgba(255,200,60,0.04),
+    inset -1px 0 0 rgba(0,0,0,0.3),
+    0 8px 32px rgba(0,0,0,0.65),
+    0 2px 8px rgba(0,0,0,0.4);
+  transition: all 0.35s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+.panel::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,220,80,0.3), transparent);
+}
+
+.panel:hover {
+  border-color: rgba(255,200,60,0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255,220,80,0.14),
+    inset 0 -1px 0 rgba(0,0,0,0.55),
+    0 16px 48px rgba(0,0,0,0.7),
+    0 0 24px rgba(255,200,60,0.07);
+  transform: translateY(-3px);
+}
+
+.panel-gold {
+  border-color: rgba(255,200,60,0.22);
+  background:
+    linear-gradient(170deg, rgba(255,200,60,0.08) 0%, transparent 40%),
+    linear-gradient(0deg, rgba(0,0,0,0.4) 0%, transparent 60%),
+    var(--surface-1);
+}
+
+/* Gloss sweep animation on panel hover */
+.panel::after {
+  content: ''; position: absolute;
+  top: 0; left: -120%; width: 60%; height: 100%;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,220,80,0.04) 50%, transparent 60%);
+  transition: left 0.6s var(--ease-out);
+  pointer-events: none;
+}
+.panel:hover::after { left: 140%; }
+
+/* ════════════════════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════════════════════ */
 .nav-bar {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  z-index: 100;
-  display: flex; align-items: center; justify-content: center; gap: 12px;
-  padding: 18px 24px;
-  background: linear-gradient(0deg, rgba(12,10,7,0.97) 0%, rgba(12,10,7,0.7) 60%, transparent 100%);
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  padding: 18px 24px 22px;
+  background: linear-gradient(0deg, rgba(7,5,3,0.98) 0%, rgba(7,5,3,0.75) 55%, transparent 100%);
 }
 
 .nav-btn {
-  width: 44px; height: 44px; border-radius: 10px;
-  border: 1px solid var(--border-brown);
-  background: rgba(255,255,255,0.03);
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s;
+  width: 40px; height: 40px; border-radius: 8px;
+  border: 1px solid rgba(255,200,60,0.14);
+  background:
+    linear-gradient(170deg, rgba(255,200,60,0.04) 0%, transparent 60%),
+    var(--surface-2);
+  color: var(--text-muted);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; box-shadow: inset 0 1px 0 rgba(255,220,80,0.07), 0 4px 12px rgba(0,0,0,0.5);
 }
-.nav-btn:hover { background: var(--bg-overlay); color: var(--gold); border-color: rgba(255,200,60,0.25); box-shadow: 0 0 12px rgba(255,200,60,0.1); }
-.nav-btn:active { transform: scale(0.93); }
+.nav-btn:hover {
+  color: var(--gold); border-color: rgba(255,200,60,0.3);
+  box-shadow: inset 0 1px 0 rgba(255,220,80,0.12), 0 4px 16px rgba(0,0,0,0.6), 0 0 12px rgba(255,200,60,0.1);
+}
+.nav-btn:active { transform: scale(0.92); }
 
-.nav-dots { display: flex; gap: 6px; align-items: center; }
+.nav-dots { display: flex; gap: 5px; align-items: center; }
 .nav-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: rgba(255,255,255,0.1); cursor: pointer;
-  transition: all 0.3s var(--ease-out); border: none;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.08); cursor: pointer;
+  transition: all 0.35s var(--ease-out); border: none;
 }
-.nav-dot.active { width: 28px; border-radius: 4px; background: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
-.nav-counter { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; color: var(--text-muted); min-width: 56px; text-align: center; }
+.nav-dot.active {
+  width: 24px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--gold-mid), var(--gold));
+  box-shadow: 0 0 8px rgba(255,200,60,0.5);
+}
 
-/* ─── BADGES ─── */
-.slide-badge {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 5px 16px; border-radius: 100px;
+.nav-counter {
   font-family: var(--font-mono); font-size: 10px;
-  letter-spacing: 0.2em; text-transform: uppercase;
-  margin-bottom: 20px; font-weight: 500;
+  letter-spacing: 0.18em; color: var(--text-muted);
+  min-width: 52px; text-align: center;
 }
-.slide-badge i[data-lucide] svg { width: 12px; height: 12px; }
 
-.badge-gold   { background: rgba(255,200,60,0.1);  border: 1px solid rgba(255,200,60,0.25); color: var(--gold); }
-.badge-red    { background: rgba(255,64,64,0.1);   border: 1px solid rgba(255,64,64,0.25);  color: var(--red-soft); }
-.badge-brown  { background: rgba(107,50,40,0.25);  border: 1px solid rgba(107,50,40,0.4);   color: var(--brown-200); }
-.badge-amber  { background: rgba(168,80,64,0.15);  border: 1px solid rgba(168,80,64,0.3);   color: var(--brown-100); }
-.badge-rust   { background: rgba(140,62,48,0.15);  border: 1px solid rgba(140,62,48,0.3);   color: var(--brown-100); }
+/* ════════════════════════════════════════════════════
+   HERO SLIDE
+════════════════════════════════════════════════════ */
+.hero-eyebrow {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 20px;
+}
 
-/* ─── TIPOGRAFIA ─── */
-.slide-title { font-family: var(--font-display); letter-spacing: 0.04em; line-height: 0.95; margin-bottom: 16px; }
-.slide-subtitle { font-size: 17px; color: var(--text-secondary); max-width: 540px; margin: 0 auto 36px; line-height: 1.6; }
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(62px, 11vw, 116px);
+  line-height: 0.88; letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
 
-/* ─── HERO ─── */
-.hero-title { font-size: clamp(56px,10vw,108px); color: var(--text-primary); line-height: 0.92; margin-bottom: 20px; }
-.hero-title span { display: block; color: var(--gold); text-shadow: 0 0 60px var(--gold-glow); }
+.hero-title .line-1 {
+  display: block; color: var(--text-bright);
+  text-shadow: 0 2px 40px rgba(0,0,0,0.8);
+}
+
+.hero-title .line-2 {
+  display: block;
+  background-image: var(--metal-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(200,150,30,0.5));
+}
 
 .hero-value-box {
-  display: inline-flex; align-items: center; gap: 14px;
-  background: linear-gradient(135deg, rgba(255,200,60,0.08), rgba(255,200,60,0.02));
-  border: 1px solid rgba(255,200,60,0.22);
-  padding: 20px 48px; border-radius: 16px; margin-top: 8px;
+  display: inline-flex; align-items: center; gap: 0;
+  margin: 28px 0 16px;
+  position: relative;
+}
+
+.hero-value-box-inner {
+  padding: 22px 52px;
+  border-radius: 3px;
+  background:
+    radial-gradient(ellipse at 40% 20%, rgba(255,200,60,0.1) 0%, transparent 60%),
+    linear-gradient(160deg, var(--surface-3) 0%, var(--surface-1) 100%);
+  border: 1px solid rgba(255,200,60,0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255,220,80,0.12),
+    inset 0 -1px 0 rgba(0,0,0,0.5),
+    0 16px 48px rgba(0,0,0,0.7),
+    0 0 32px rgba(255,200,60,0.08);
   position: relative; overflow: hidden;
 }
-.hero-value-box::before {
-  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,200,60,0.08), transparent);
-  animation: shimmer 3.5s ease-in-out infinite;
+
+.hero-value-box-inner::before {
+  content: ''; position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,220,80,0.06), transparent);
+  animation: shimmer 4s ease-in-out infinite;
 }
+
 @keyframes shimmer { 0% { left: -100%; } 100% { left: 100%; } }
 
-.hv-currency { font-family: var(--font-mono); font-size: 11px; color: var(--gold-dark); letter-spacing: 0.18em; text-transform: uppercase; }
-.hv-amount { font-family: var(--font-display); font-size: 64px; color: var(--gold); line-height: 1; text-shadow: 0 0 30px var(--gold-glow); }
-.hero-or { margin-top: 14px; font-size: 14px; color: var(--text-muted); letter-spacing: 0.05em; }
-.hero-or strong { color: var(--brown-100); font-weight: 600; }
+.hv-label {
+  font-family: var(--font-mono); font-size: 9px;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 4px;
+}
+
+.hv-amount {
+  font-family: var(--font-display); font-size: 72px; line-height: 1;
+  letter-spacing: 0.04em;
+  background-image: var(--metal-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px rgba(200,150,30,0.4));
+}
+
+.hero-alt {
+  font-size: 13px; color: var(--text-muted); letter-spacing: 0.06em;
+  margin-bottom: 28px;
+}
+.hero-alt strong { color: var(--brown-100); font-weight: 600; }
 
 .hero-timer {
-  display: inline-flex; align-items: center; gap: 12px; margin-top: 28px;
-  padding: 12px 28px; background: var(--bg-raised);
-  border: 1px solid var(--border-brown); border-radius: 12px;
+  display: inline-flex; align-items: center; gap: 14px;
+  padding: 12px 28px; border-radius: 3px;
+  background: var(--surface-2);
+  border: 1px solid rgba(255,200,60,0.1);
+  box-shadow: inset 0 1px 0 rgba(255,220,80,0.06), 0 6px 20px rgba(0,0,0,0.5);
 }
-.t-days { font-family: var(--font-display); font-size: 38px; color: var(--red-soft); line-height: 1; text-shadow: 0 0 20px var(--red-glow); }
-.t-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; color: var(--text-secondary); text-transform: uppercase; }
+.t-days {
+  font-family: var(--font-display); font-size: 42px; line-height: 1;
+  background-image: var(--metal-bronze);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.t-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
+.t-sep { color: var(--text-muted); opacity: 0.4; }
 
-/* ─── ROADMAP ─── */
+/* ════════════════════════════════════════════════════
+   ROADMAP CARDS
+════════════════════════════════════════════════════ */
+.roadmap-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 14px; max-width: 920px; margin: 0 auto;
+}
+
 .roadmap-card {
-  background: var(--bg-raised); border: 1px solid var(--border-subtle);
-  border-radius: 16px; padding: 28px 16px; text-align: center;
-  transition: all 0.3s var(--ease-out); position: relative; overflow: hidden;
+  border-radius: 4px; padding: 28px 18px 24px; text-align: center;
 }
-.roadmap-card:hover { transform: translateY(-4px); border-color: rgba(255,200,60,0.15); box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 20px rgba(255,200,60,0.06); }
-.roadmap-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-.roadmap-card:nth-child(1)::before { background: var(--gold); }
-.roadmap-card:nth-child(2)::before { background: var(--brown-400); }
-.roadmap-card:nth-child(3)::before { background: var(--brown-300); }
-.roadmap-card:nth-child(4)::before { background: var(--red-soft); }
 
-.roadmap-num { font-family: var(--font-display); font-size: 36px; opacity: 0.15; line-height: 1; }
-.roadmap-icon { margin: 10px auto 8px; }
-.roadmap-icon svg { width: 28px; height: 28px; }
-.roadmap-label { font-family: var(--font-display); font-size: 19px; letter-spacing: 0.06em; color: var(--text-primary); line-height: 1.1; }
+.roadmap-card::before { display: none; }
+.roadmap-card:hover { transform: translateY(-5px); }
 
-/* ─── PHASE ─── */
-.phase-header { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 10px; }
-.phase-num { font-family: var(--font-display); font-size: 64px; font-weight: 400; line-height: 1; opacity: 0.1; }
-.phase-title { font-family: var(--font-display); font-size: clamp(42px,7vw,72px); letter-spacing: 0.04em; }
-.phase-desc { font-size: 17px; color: var(--text-secondary); max-width: 560px; margin: 0 auto 40px; line-height: 1.65; }
+.roadmap-card .rc-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  border-radius: 4px 4px 0 0;
+}
+.roadmap-card:nth-child(1) .rc-bar { background: linear-gradient(90deg, var(--gold-mid), var(--gold), transparent); }
+.roadmap-card:nth-child(2) .rc-bar { background: linear-gradient(90deg, var(--bronze), var(--bronze-light), transparent); }
+.roadmap-card:nth-child(3) .rc-bar { background: linear-gradient(90deg, var(--brown-300), var(--brown-200), transparent); }
+.roadmap-card:nth-child(4) .rc-bar { background: linear-gradient(90deg, var(--red), var(--red-soft), transparent); }
 
-.phase-items { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; max-width: 700px; margin: 0 auto; }
+.roadmap-num {
+  font-family: var(--font-display); font-size: 38px;
+  letter-spacing: 0.04em; line-height: 1; opacity: 0.12;
+}
+
+.roadmap-icon {
+  margin: 10px auto 12px;
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,200,60,0.12);
+  background: rgba(255,200,60,0.06);
+}
+.roadmap-icon svg { width: 20px; height: 20px; }
+
+.roadmap-label {
+  font-family: var(--font-display); font-size: 18px;
+  letter-spacing: 0.06em; color: var(--text-main); line-height: 1.15;
+}
+
+/* ════════════════════════════════════════════════════
+   PHASE SLIDES
+════════════════════════════════════════════════════ */
+.phase-wrap { max-width: 800px; margin: 0 auto; }
+
+.phase-header-row {
+  display: flex; align-items: baseline; justify-content: center;
+  gap: 18px; margin-bottom: 8px;
+}
+
+.phase-num-bg {
+  font-family: var(--font-display); font-size: 90px; line-height: 1;
+  opacity: 0.07; letter-spacing: 0.04em;
+}
+
+.phase-title-main {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 7vw, 76px);
+  letter-spacing: 0.05em; line-height: 0.95;
+}
+
+.phase-desc {
+  font-size: 16px; color: var(--text-sub); max-width: 540px;
+  margin: 12px auto 36px; line-height: 1.7;
+}
+
+.phase-items {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  justify-content: center;
+}
+
 .phase-item {
-  padding: 12px 20px; border-radius: 12px; font-size: 15px; font-weight: 600;
-  letter-spacing: 0.02em; display: flex; align-items: center; gap: 10px;
-  transition: transform 0.2s var(--ease-out);
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 20px; border-radius: 3px;
+  font-size: 14px; font-weight: 600; letter-spacing: 0.03em;
+  transition: all 0.25s var(--ease-out);
+  border: 1px solid; position: relative; overflow: hidden;
+}
+.phase-item::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
 }
 .phase-item:hover { transform: translateY(-2px); }
-.phase-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+.phase-item svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-.pi-gold   { background: rgba(255,200,60,0.07);  border: 1px solid rgba(255,200,60,0.18);  color: var(--gold); }
-.pi-brown  { background: rgba(107,50,40,0.15);   border: 1px solid rgba(107,50,40,0.3);    color: var(--brown-100); }
-.pi-rust   { background: rgba(140,62,48,0.12);   border: 1px solid rgba(140,62,48,0.25);   color: var(--brown-200); }
-.pi-red    { background: rgba(255,64,64,0.07);   border: 1px solid rgba(255,64,64,0.18);   color: var(--red-soft); }
+.pi-gold   { background: rgba(255,200,60,0.06); border-color: rgba(255,200,60,0.18); color: var(--gold); }
+.pi-brown  { background: rgba(140,70,40,0.1);   border-color: rgba(180,100,60,0.2);  color: var(--brown-100); }
+.pi-rust   { background: rgba(120,60,30,0.1);   border-color: rgba(160,80,40,0.2);   color: var(--brown-200); }
+.pi-red    { background: rgba(255,60,60,0.06);  border-color: rgba(255,80,80,0.18);  color: var(--red-soft); }
 
-/* ─── META DIÁRIA ─── */
-.goals-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; max-width: 800px; margin: 0 auto; }
+/* ════════════════════════════════════════════════════
+   META DIÁRIA
+════════════════════════════════════════════════════ */
+.goals-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 18px; max-width: 820px; margin: 0 auto;
+}
+
 .goal-card {
-  background: var(--bg-raised); border: 1px solid var(--border-subtle);
-  border-radius: 18px; padding: 36px 24px; text-align: center;
-  transition: all 0.3s var(--ease-out); position: relative; overflow: hidden;
-}
-.goal-card:hover { transform: translateY(-4px); border-color: rgba(255,200,60,0.12); box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 24px rgba(255,200,60,0.06); }
-.goal-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
-.goal-card:nth-child(1)::after { background: linear-gradient(90deg, var(--gold), transparent); }
-.goal-card:nth-child(2)::after { background: linear-gradient(90deg, var(--red-soft), transparent); }
-.goal-card:nth-child(3)::after { background: linear-gradient(90deg, var(--brown-400), transparent); }
-
-.gc-icon { margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 16px; }
-.gc-icon svg { width: 28px; height: 28px; }
-.goal-card:nth-child(1) .gc-icon { background: rgba(255,200,60,0.1); border: 1px solid rgba(255,200,60,0.2); color: var(--gold); }
-.goal-card:nth-child(2) .gc-icon { background: rgba(255,64,64,0.1);  border: 1px solid rgba(255,64,64,0.2);  color: var(--red-soft); }
-.goal-card:nth-child(3) .gc-icon { background: rgba(107,50,40,0.2);  border: 1px solid rgba(107,50,40,0.35); color: var(--brown-200); }
-
-.gc-number { font-family: var(--font-display); font-size: 68px; line-height: 1; color: var(--gold); text-shadow: 0 0 30px var(--gold-glow); }
-.goal-card:nth-child(2) .gc-number { color: var(--red-soft); text-shadow: 0 0 30px var(--red-glow); }
-.goal-card:nth-child(3) .gc-number { color: var(--brown-200); text-shadow: none; }
-.gc-label { font-size: 15px; color: var(--text-secondary); margin-top: 8px; font-weight: 600; }
-.gc-sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); margin-top: 10px; }
-
-/* ─── RANKING — CATEGORIA SLIDE ─── */
-.cat-slide-inner {
-  display: flex; flex-direction: column; align-items: center;
-  max-width: 640px; margin: 0 auto; text-align: center;
+  border-radius: 4px; padding: 36px 24px 30px; text-align: center;
 }
 
-.cat-number-row {
-  display: flex; align-items: center; gap: 16px; margin-bottom: 4px; justify-content: center;
-}
+.goal-card::before { display: none; }
+.goal-card:hover { transform: translateY(-5px); }
 
-.cat-num-label {
-  font-family: var(--font-mono); font-size: 10px;
-  letter-spacing: 0.2em; text-transform: uppercase;
+.goal-card .gc-bottom-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  border-radius: 0 0 4px 4px;
 }
+.goal-card:nth-child(1) .gc-bottom-bar { background: linear-gradient(90deg, var(--gold-mid), var(--gold), transparent); }
+.goal-card:nth-child(2) .gc-bottom-bar { background: linear-gradient(90deg, var(--red), var(--red-soft), transparent); }
+.goal-card:nth-child(3) .gc-bottom-bar { background: linear-gradient(90deg, var(--bronze), var(--bronze-light), transparent); }
 
-.cat-icon-wrap {
-  width: 120px; height: 120px; border-radius: 28px;
+.gc-icon-wrap {
+  width: 52px; height: 52px; border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
-  margin: 24px auto 28px; position: relative;
+  margin: 0 auto 16px;
+  border: 1px solid rgba(255,200,60,0.15);
+  background: radial-gradient(circle at 35% 25%, rgba(255,200,60,0.1) 0%, rgba(255,200,60,0.03) 100%);
+  box-shadow: inset 0 1px 0 rgba(255,220,80,0.1);
 }
-.cat-icon-wrap svg { width: 60px; height: 60px; }
-.cat-icon-wrap::before {
-  content: ''; position: absolute; inset: -1px;
-  border-radius: 29px;
-  background: conic-gradient(from 0deg, currentColor, transparent 60%, currentColor);
-  opacity: 0.25;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor; mask-composite: exclude;
-  padding: 1px;
+.gc-icon-wrap svg { width: 22px; height: 22px; }
+
+.goal-card:nth-child(1) .gc-icon-wrap { color: var(--gold); }
+.goal-card:nth-child(2) .gc-icon-wrap { color: var(--red-soft); border-color: rgba(255,64,64,0.2); background: radial-gradient(circle at 35% 25%, rgba(255,64,64,0.1) 0%, rgba(255,64,64,0.03) 100%); }
+.goal-card:nth-child(3) .gc-icon-wrap { color: var(--bronze-light); border-color: rgba(180,96,48,0.2); background: radial-gradient(circle at 35% 25%, rgba(180,96,48,0.1) 0%, rgba(180,96,48,0.03) 100%); }
+
+.gc-number {
+  font-family: var(--font-display); font-size: 74px; line-height: 1;
+  letter-spacing: 0.04em;
+}
+.goal-card:nth-child(1) .gc-number {
+  background-image: var(--metal-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.goal-card:nth-child(2) .gc-number {
+  background-image: linear-gradient(170deg, #ff9090 0%, #ff4040 30%, #cc2020 55%, #ff6060 80%, #ff4040 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.goal-card:nth-child(3) .gc-number {
+  background-image: var(--metal-bronze);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.cat-title { font-family: var(--font-display); font-size: clamp(38px,6vw,64px); letter-spacing: 0.04em; line-height: 1; margin-bottom: 16px; }
-.cat-desc { font-size: 16px; color: var(--text-secondary); line-height: 1.65; max-width: 460px; }
+.gc-label { font-size: 14px; color: var(--text-sub); margin-top: 8px; font-weight: 600; letter-spacing: 0.02em; }
+.gc-sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-top: 8px; }
 
-.cat-proof-row {
-  display: flex; gap: 10px; margin-top: 28px; flex-wrap: wrap; justify-content: center;
+/* ════════════════════════════════════════════════════
+   RANKING — MEDALLION CATEGORY SLIDE
+════════════════════════════════════════════════════ */
+.cat-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  max-width: 700px; margin: 0 auto; text-align: center;
 }
-.cat-proof-chip {
-  display: flex; align-items: center; gap: 7px;
-  padding: 8px 16px; border-radius: var(--radius, 100px);
-  font-size: 13px; font-weight: 600;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: var(--bg-raised); color: var(--text-secondary);
-}
-.cat-proof-chip svg { width: 13px; height: 13px; flex-shrink: 0; }
 
-/* ─── SCRIPT ─── */
-.script-wrapper { max-width: 680px; margin: 0 auto; text-align: left; }
+.cat-medal {
+  width: 150px; height: 150px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 20px auto 28px;
+  position: relative;
+}
 
-.script-strategy { display: flex; gap: 14px; margin-bottom: 28px; justify-content: center; }
-.strat-chip {
-  display: flex; align-items: center; gap: 8px;
-  padding: 11px 18px; border-radius: 12px; font-size: 14px; font-weight: 600;
-}
-.strat-chip svg { width: 15px; height: 15px; flex-shrink: 0; }
-.sc-1 { background: rgba(107,50,40,0.2); border: 1px solid rgba(107,50,40,0.35); color: var(--brown-100); }
-.sc-2 { background: rgba(255,200,60,0.08); border: 1px solid rgba(255,200,60,0.18); color: var(--gold); }
-
-.msg-container { background: var(--bg-raised); border: 1px solid var(--border-brown); border-radius: 20px; padding: 36px 32px; position: relative; }
-.msg-label {
-  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--gold); margin-bottom: 18px;
-  display: flex; align-items: center; gap: 8px; opacity: 0.8;
-}
-.msg-label svg { width: 12px; height: 12px; }
-.msg-bubble {
-  background: rgba(255,200,60,0.04); border: 1px solid rgba(255,200,60,0.1);
-  border-radius: 0 18px 18px 18px; padding: 24px 28px;
-  font-size: 17px; line-height: 1.75; color: var(--text-primary); position: relative;
-}
-.msg-bubble-icon {
-  position: absolute; top: -18px; left: -6px;
-  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-  color: var(--gold); opacity: 0.8;
-}
-.msg-bubble-icon svg { width: 22px; height: 22px; }
-.msg-bubble strong { color: var(--gold); }
-
-/* ─── REGRAS ─── */
-.rules-box {
-  max-width: 720px; margin: 0 auto; text-align: left;
-  background: linear-gradient(135deg, rgba(255,64,64,0.04), rgba(255,200,60,0.02));
-  border: 1px solid rgba(255,64,64,0.12); border-radius: 20px; padding: 40px 36px;
+.cat-medal-inner {
+  width: 100%; height: 100%; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
   position: relative; overflow: hidden;
 }
-.rules-box::before {
-  content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-  background: linear-gradient(180deg, var(--red), var(--gold)); border-radius: 4px 0 0 4px;
+
+.cat-medal-inner::before {
+  content: ''; position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%);
+  animation: medalShine 3s ease-in-out infinite;
 }
+@keyframes medalShine { 0%, 100% { left: -100%; } 60% { left: 100%; } }
+
+.cat-medal svg { width: 64px; height: 64px; position: relative; z-index: 1; }
+
+/* color variants per category */
+.medal-gold .cat-medal-inner {
+  background: radial-gradient(circle at 35% 25%, rgba(255,220,80,0.3) 0%, var(--surface-3) 60%);
+  border: 2px solid rgba(255,200,60,0.4);
+  box-shadow:
+    inset 0 2px 0 rgba(255,220,80,0.2),
+    inset 0 -2px 0 rgba(0,0,0,0.5),
+    0 0 0 4px rgba(255,200,60,0.07),
+    0 0 0 8px rgba(255,200,60,0.03),
+    0 24px 64px rgba(0,0,0,0.8),
+    0 0 48px rgba(255,200,60,0.18);
+  color: var(--gold);
+}
+.medal-bronze .cat-medal-inner {
+  background: radial-gradient(circle at 35% 25%, rgba(200,120,60,0.25) 0%, var(--surface-3) 60%);
+  border: 2px solid rgba(180,100,50,0.4);
+  box-shadow:
+    inset 0 2px 0 rgba(200,140,80,0.2),
+    inset 0 -2px 0 rgba(0,0,0,0.5),
+    0 0 0 4px rgba(180,100,50,0.07),
+    0 24px 64px rgba(0,0,0,0.8),
+    0 0 48px rgba(180,100,50,0.15);
+  color: var(--bronze-light);
+}
+.medal-red .cat-medal-inner {
+  background: radial-gradient(circle at 35% 25%, rgba(255,80,80,0.2) 0%, var(--surface-3) 60%);
+  border: 2px solid rgba(255,80,80,0.32);
+  box-shadow:
+    inset 0 2px 0 rgba(255,120,100,0.15),
+    inset 0 -2px 0 rgba(0,0,0,0.5),
+    0 0 0 4px rgba(255,64,64,0.06),
+    0 24px 64px rgba(0,0,0,0.8),
+    0 0 48px rgba(255,64,64,0.12);
+  color: var(--red-soft);
+}
+.medal-silver .cat-medal-inner {
+  background: radial-gradient(circle at 35% 25%, rgba(210,190,160,0.2) 0%, var(--surface-3) 60%);
+  border: 2px solid rgba(180,160,120,0.35);
+  box-shadow:
+    inset 0 2px 0 rgba(220,200,160,0.15),
+    inset 0 -2px 0 rgba(0,0,0,0.5),
+    0 0 0 4px rgba(180,160,120,0.06),
+    0 24px 64px rgba(0,0,0,0.8);
+  color: var(--brown-100);
+}
+
+.cat-number {
+  font-family: var(--font-mono); font-size: 9px;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 4px;
+}
+
+.cat-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6.5vw, 68px);
+  letter-spacing: 0.06em; line-height: 0.95;
+  margin-bottom: 18px;
+}
+
+.cat-desc {
+  font-size: 15px; color: var(--text-sub); line-height: 1.7;
+  max-width: 460px;
+}
+
+.cat-chips {
+  display: flex; gap: 10px; margin-top: 24px;
+  flex-wrap: wrap; justify-content: center;
+}
+
+.cat-chip {
+  display: flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border-radius: 3px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+  border: 1px solid; background: var(--surface-2);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.cat-chip svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* ════════════════════════════════════════════════════
+   SCRIPT SLIDE
+════════════════════════════════════════════════════ */
+.script-wrap { max-width: 680px; margin: 0 auto; text-align: left; }
+
+.strat-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; }
+.strat-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: 3px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.02em;
+  border: 1px solid;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.strat-chip svg { width: 14px; height: 14px; flex-shrink: 0; }
+.sc-1 { background: rgba(140,70,30,0.15); border-color: rgba(180,100,60,0.25); color: var(--brown-100); }
+.sc-2 { background: rgba(255,200,60,0.06); border-color: rgba(255,200,60,0.18); color: var(--gold); }
+
+.msg-panel {
+  border-radius: 4px; padding: 32px 30px; position: relative;
+}
+
+.msg-header {
+  font-family: var(--font-mono); font-size: 9px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold-mid); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px; opacity: 0.85;
+}
+.msg-header svg { width: 11px; height: 11px; }
+
+.msg-bubble {
+  background: rgba(255,200,60,0.035);
+  border: 1px solid rgba(255,200,60,0.09);
+  border-radius: 2px 14px 14px 14px;
+  padding: 22px 26px;
+  font-size: 16px; line-height: 1.8; color: var(--text-main);
+  position: relative;
+}
+.msg-bubble-icon {
+  position: absolute; top: -16px; left: -4px;
+  color: var(--gold); opacity: 0.7;
+}
+.msg-bubble-icon svg { width: 20px; height: 20px; }
+.msg-bubble strong { color: var(--gold); font-weight: 600; }
+
+/* ════════════════════════════════════════════════════
+   RULES SLIDE
+════════════════════════════════════════════════════ */
+.rules-box {
+  max-width: 720px; margin: 0 auto; text-align: left;
+  border-radius: 4px; padding: 36px 36px 32px;
+  position: relative;
+}
+
+.rules-left-bar {
+  position: absolute; top: 0; left: 0;
+  width: 3px; height: 100%; border-radius: 4px 0 0 4px;
+  background: linear-gradient(180deg, var(--gold-mid), var(--red), var(--gold-dark));
+}
+
 .rule-item {
   display: flex; align-items: flex-start; gap: 14px;
-  padding: 13px 0; font-size: 16px; line-height: 1.55;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  padding: 12px 0; font-size: 15px; line-height: 1.6;
+  border-bottom: 1px solid rgba(255,255,255,0.035);
 }
 .rule-item:last-child { border-bottom: none; }
+
 .rule-icon {
-  flex-shrink: 0; width: 28px; height: 28px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center; margin-top: 2px;
-}
-.rule-icon svg { width: 14px; height: 14px; }
-.ri-yes { background: rgba(255,200,60,0.1); border: 1px solid rgba(255,200,60,0.22); color: var(--gold); }
-.ri-no  { background: rgba(255,64,64,0.1);  border: 1px solid rgba(255,64,64,0.22);  color: var(--red-soft); }
-
-/* ─── CTA ─── */
-.cta-title { font-family: var(--font-display); font-size: clamp(48px,9vw,100px); letter-spacing: 0.04em; line-height: 0.95; margin-bottom: 20px; color: var(--text-primary); }
-.cta-title span { display: block; color: var(--gold); text-shadow: 0 0 60px var(--gold-glow); }
-.cta-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--text-muted); }
-
-.cta-icon-wrap {
-  width: 80px; height: 80px; margin: 0 auto 24px;
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 6px;
   display: flex; align-items: center; justify-content: center;
-  animation: flamePulse 1.8s ease-in-out infinite;
+  margin-top: 2px;
 }
-.cta-icon-wrap svg { width: 64px; height: 64px; color: var(--gold); filter: drop-shadow(0 0 20px var(--gold-glow)); }
-@keyframes flamePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+.rule-icon svg { width: 13px; height: 13px; }
+.ri-yes { background: rgba(255,200,60,0.09); border: 1px solid rgba(255,200,60,0.2); color: var(--gold); }
+.ri-no  { background: rgba(255,60,60,0.09);  border: 1px solid rgba(255,60,60,0.2);  color: var(--red-soft); }
 
-/* ─── ORNAMENTO ─── */
-.ornament { display: flex; align-items: center; gap: 12px; justify-content: center; margin: 10px 0; }
-.ornament-line { width: 32px; height: 1px; background: var(--brown-700); }
-.ornament-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); opacity: 0.5; }
+/* ════════════════════════════════════════════════════
+   CTA SLIDE
+════════════════════════════════════════════════════ */
+.cta-glow {
+  position: absolute; width: 500px; height: 500px;
+  left: 50%; top: 50%; transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,200,60,0.1) 0%, transparent 70%);
+  pointer-events: none;
+  animation: ctaBreath 3s ease-in-out infinite;
+}
+@keyframes ctaBreath { 0%,100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); } 50% { opacity: 1; transform: translate(-50%,-50%) scale(1.2); } }
 
-/* ─── STAGGER ─── */
-.slide.active .stagger { animation: staggerIn 0.5s var(--ease-out) forwards; opacity: 0; transform: translateY(14px); }
+.cta-main {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: clamp(52px, 10vw, 108px);
+  letter-spacing: 0.06em; line-height: 0.92;
+  margin-bottom: 22px;
+}
+.cta-main .line-1 { display: block; color: var(--text-bright); }
+.cta-main .line-2 {
+  display: block;
+  background-image: var(--metal-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 40px rgba(200,150,30,0.6));
+}
+
+.cta-icon {
+  margin: 0 auto 22px;
+  width: 72px; height: 72px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 25%, rgba(255,200,60,0.15) 0%, var(--surface-3) 70%);
+  border: 1px solid rgba(255,200,60,0.25);
+  box-shadow: 0 0 32px rgba(255,200,60,0.15), inset 0 1px 0 rgba(255,220,80,0.15);
+  animation: iconPulse 2s ease-in-out infinite;
+}
+.cta-icon svg { width: 36px; height: 36px; color: var(--gold); }
+@keyframes iconPulse { 0%,100% { box-shadow: 0 0 32px rgba(255,200,60,0.15), inset 0 1px 0 rgba(255,220,80,0.15); transform: scale(1); } 50% { box-shadow: 0 0 56px rgba(255,200,60,0.35), inset 0 1px 0 rgba(255,220,80,0.2); transform: scale(1.06); } }
+
+.cta-line {
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted);
+}
+
+/* ════════════════════════════════════════════════════
+   STAGGER ANIMATIONS
+════════════════════════════════════════════════════ */
+.slide.active .stagger {
+  animation: staggerIn 0.55s var(--ease-out) forwards;
+  opacity: 0; transform: translateY(16px);
+}
 .slide.active .stagger:nth-child(1) { animation-delay: 0.04s; }
-.slide.active .stagger:nth-child(2) { animation-delay: 0.10s; }
-.slide.active .stagger:nth-child(3) { animation-delay: 0.17s; }
-.slide.active .stagger:nth-child(4) { animation-delay: 0.24s; }
-.slide.active .stagger:nth-child(5) { animation-delay: 0.31s; }
-.slide.active .stagger:nth-child(6) { animation-delay: 0.38s; }
-.slide.active .stagger:nth-child(7) { animation-delay: 0.45s; }
-.slide.active .stagger:nth-child(8) { animation-delay: 0.52s; }
+.slide.active .stagger:nth-child(2) { animation-delay: 0.11s; }
+.slide.active .stagger:nth-child(3) { animation-delay: 0.18s; }
+.slide.active .stagger:nth-child(4) { animation-delay: 0.25s; }
+.slide.active .stagger:nth-child(5) { animation-delay: 0.32s; }
+.slide.active .stagger:nth-child(6) { animation-delay: 0.39s; }
+.slide.active .stagger:nth-child(7) { animation-delay: 0.46s; }
+.slide.active .stagger:nth-child(8) { animation-delay: 0.53s; }
 @keyframes staggerIn { to { opacity: 1; transform: translateY(0); } }
 
-/* ─── RESPONSIVO ─── */
-@media (max-width: 900px) { .goals-grid { gap: 14px; } }
-@media (max-width: 700px) {
-  .slide { padding: 32px 20px 90px; }
-  .goals-grid { grid-template-columns: 1fr; max-width: 280px; }
+/* ════════════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════════════ */
+@media (max-width: 860px) {
+  .roadmap-grid { grid-template-columns: repeat(2,1fr); }
+  .goals-grid   { gap: 12px; }
+  .strat-row    { flex-direction: column; align-items: center; }
+}
+@media (max-width: 680px) {
+  .slide { padding: 28px 18px 90px; }
+  .goals-grid { grid-template-columns: 1fr; max-width: 260px; }
   .phase-items { flex-direction: column; align-items: center; }
-  .script-strategy { flex-direction: column; align-items: center; }
-  .rules-box { padding: 24px 20px; }
-  .msg-container { padding: 24px 18px; }
+  .rules-box { padding: 24px 20px 20px; }
+  .msg-panel { padding: 24px 18px; }
+  .roadmap-grid { grid-template-columns: repeat(2,1fr); }
 }
 </style>
 </head>
 <body>
 
-<div class="bg-texture"></div>
+<!-- Background layers -->
+<div class="bg-atmo"></div>
 <div class="bg-grain"></div>
-<div class="ambient">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
+<div class="bg-lines"></div>
+<div class="bg-vignette"></div>
+<div class="scene-orb scene-orb-gold" id="sceneOrb"></div>
 
 <div class="slides-wrapper" id="slidesWrapper">
 
-  <!-- ═══ SLIDE 0: COVER ═══ -->
-  <div class="slide active" data-slide="0">
-    <div class="slide-inner">
-      <div class="slide-badge badge-gold stagger"><i data-lucide="zap"></i> Desafio do Mês — Abril 2026</div>
-      <h1 class="slide-title hero-title stagger">
-        MENTORIA PAGA
-        <span>EM 30 DIAS</span>
-      </h1>
-      <p class="slide-subtitle stagger" style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.28em;text-transform:uppercase;color:var(--text-muted)">O jogo começa agora</p>
+<!-- ═══════════════════════════════════════
+  SLIDE 0 — COVER
+═══════════════════════════════════════ -->
+<div class="slide active" data-slide="0" data-orb="gold">
+  <div class="slide-inner">
 
-      <div class="hero-value-box stagger">
-        <div>
-          <div class="hv-currency">Meta Mínima</div>
-          <div class="hv-amount">R$ 1.997</div>
-        </div>
-      </div>
-      <div class="hero-or stagger">ou <strong>2 projetos de R$ 997</strong></div>
+    <div class="orn-row stagger">
+      <div class="orn-line"></div>
+      <div class="orn-gem">✦ · ✦ · ✦</div>
+      <div class="orn-line"></div>
+    </div>
 
-      <div class="hero-timer stagger">
-        <i data-lucide="timer" style="color:var(--text-secondary);width:18px;height:18px"></i>
-        <span class="t-label">Prazo</span>
-        <span class="t-days">30</span>
-        <span style="font-size:14px;color:var(--text-muted)">dias</span>
+    <div class="hero-eyebrow stagger">Desafio do Mês &nbsp;·&nbsp; Abril 2026</div>
+
+    <h1 class="hero-title stagger">
+      <span class="line-1">MENTORIA PAGA</span>
+      <span class="line-2">EM 30 DIAS</span>
+    </h1>
+
+    <div class="orn-divider stagger">
+      <div class="orn-divider-line"></div>
+      <div class="orn-divider-center">◆ ◆ ◆</div>
+      <div class="orn-divider-line"></div>
+    </div>
+
+    <div class="hero-value-box stagger">
+      <div class="hero-value-box-inner corner-frame">
+        <span class="corner-tl"></span><span class="corner-tr"></span>
+        <span class="corner-bl"></span><span class="corner-br"></span>
+        <div class="hv-label">Meta Mínima</div>
+        <div class="hv-amount">R$ 1.997</div>
       </div>
     </div>
+
+    <p class="hero-alt stagger">ou <strong>2 projetos de R$ 997</strong></p>
+
+    <div class="hero-timer stagger">
+      <i data-lucide="timer" style="color:var(--text-muted);width:18px;height:18px"></i>
+      <span class="t-label">Prazo</span>
+      <span class="t-sep">|</span>
+      <span class="t-days">30</span>
+      <span style="font-size:13px;color:var(--text-muted);font-family:var(--font-mono);letter-spacing:0.1em">DIAS</span>
+    </div>
+
   </div>
+</div>
 
-  <!-- ═══ SLIDE 1: ROADMAP ═══ -->
-  <div class="slide" data-slide="1">
-    <div class="slide-inner">
-      <div class="slide-badge badge-brown stagger"><i data-lucide="map"></i> Visão Geral</div>
-      <h2 class="slide-title stagger" style="font-size:clamp(40px,7vw,72px)">ROADMAP DA MISSÃO</h2>
-      <p class="slide-subtitle stagger">4 fases para conquistar seu primeiro (ou próximo) cliente pago.</p>
+<!-- ═══════════════════════════════════════
+  SLIDE 1 — ROADMAP
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="1" data-orb="dark">
+  <div class="slide-inner">
 
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:900px;margin:0 auto">
-        <div class="roadmap-card stagger">
-          <div class="roadmap-num" style="color:var(--gold)">01</div>
-          <div class="roadmap-icon" style="color:var(--gold)"><i data-lucide="search"></i></div>
-          <div class="roadmap-label">BIBLIOTECA<br>DE ANÚNCIOS</div>
-        </div>
-        <div class="roadmap-card stagger">
-          <div class="roadmap-num" style="color:var(--brown-400)">02</div>
-          <div class="roadmap-icon" style="color:var(--brown-400)"><i data-lucide="folder-open"></i></div>
-          <div class="roadmap-label">SEPARAR<br>MATERIAIS</div>
-        </div>
-        <div class="roadmap-card stagger">
-          <div class="roadmap-num" style="color:var(--brown-300)">03</div>
-          <div class="roadmap-icon" style="color:var(--brown-300)"><i data-lucide="cpu"></i></div>
-          <div class="roadmap-label">RECRIAR<br>COM IA</div>
-        </div>
-        <div class="roadmap-card stagger">
-          <div class="roadmap-num" style="color:var(--red-soft)">04</div>
-          <div class="roadmap-icon" style="color:var(--red-soft)"><i data-lucide="send"></i></div>
-          <div class="roadmap-label">ABORDAR<br>LEADS</div>
-        </div>
+    <div class="slide-badge badge-brown stagger"><i data-lucide="map"></i> Visão Geral</div>
+
+    <h2 class="slide-title stagger" style="font-size:clamp(42px,7vw,78px)">
+      <span class="t-gold">ROADMAP</span> DA MISSÃO
+    </h2>
+
+    <div class="orn-row stagger" style="margin-bottom:28px">
+      <div class="orn-line"></div>
+      <div class="orn-gem">◆ · ◆ · ◆</div>
+      <div class="orn-line"></div>
+    </div>
+
+    <div class="roadmap-grid">
+      <div class="panel roadmap-card stagger">
+        <div class="rc-bar"></div>
+        <div class="roadmap-num t-gold">01</div>
+        <div class="roadmap-icon" style="color:var(--gold)"><i data-lucide="search"></i></div>
+        <div class="roadmap-label">BIBLIOTECA<br>DE ANÚNCIOS</div>
+      </div>
+      <div class="panel roadmap-card stagger">
+        <div class="rc-bar"></div>
+        <div class="roadmap-num" style="color:var(--bronze)">02</div>
+        <div class="roadmap-icon" style="color:var(--bronze-light);border-color:rgba(180,96,48,0.2)"><i data-lucide="folder-open"></i></div>
+        <div class="roadmap-label">SEPARAR<br>MATERIAIS</div>
+      </div>
+      <div class="panel roadmap-card stagger">
+        <div class="rc-bar"></div>
+        <div class="roadmap-num" style="color:var(--brown-300)">03</div>
+        <div class="roadmap-icon" style="color:var(--brown-200);border-color:rgba(196,104,88,0.2)"><i data-lucide="cpu"></i></div>
+        <div class="roadmap-label">RECRIAR<br>COM IA</div>
+      </div>
+      <div class="panel roadmap-card stagger">
+        <div class="rc-bar"></div>
+        <div class="roadmap-num" style="color:var(--red-soft)">04</div>
+        <div class="roadmap-icon" style="color:var(--red-soft);border-color:rgba(255,80,80,0.2)"><i data-lucide="send"></i></div>
+        <div class="roadmap-label">ABORDAR<br>LEADS</div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══ SLIDE 2: FASE 01 ═══ -->
-  <div class="slide" data-slide="2">
-    <div class="slide-inner">
-      <div class="slide-badge badge-gold stagger"><i data-lucide="search"></i> Fase 01</div>
-      <div class="phase-header stagger">
-        <span class="phase-num" style="color:var(--gold)">01</span>
-        <h2 class="phase-title" style="color:var(--gold)">BIBLIOTECA DE ANÚNCIOS</h2>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 2 — FASE 01
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="2" data-orb="gold">
+  <div class="phase-watermark">01</div>
+  <div class="slide-inner">
+
+    <div class="slide-badge badge-gold stagger"><i data-lucide="search"></i> Fase 01</div>
+
+    <div class="phase-wrap">
+      <div class="phase-header-row stagger">
+        <h2 class="phase-title-main t-gold">BIBLIOTECA DE ANÚNCIOS</h2>
       </div>
-      <p class="phase-desc stagger">Pesquise na Biblioteca de Anúncios do Meta por infoprodutores que estão rodando tráfego. Esses são seus potenciais clientes.</p>
+
+      <div class="orn-row stagger" style="margin-bottom:14px">
+        <div class="orn-line l" style="max-width:80px"></div>
+        <div class="orn-gem">◆ ◆ ◆</div>
+        <div class="orn-line r" style="max-width:80px"></div>
+      </div>
+
+      <p class="phase-desc stagger">Pesquise na Biblioteca de Anúncios do Meta por infoprodutores rodando tráfego. Esses são seus potenciais clientes.</p>
 
       <div class="phase-items">
         <div class="phase-item pi-gold stagger"><i data-lucide="graduation-cap"></i> Aula Gratuita</div>
@@ -491,16 +1031,30 @@ i[data-lucide] svg { display: block; }
         <div class="phase-item pi-gold stagger"><i data-lucide="play-circle"></i> Aula Grátis</div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══ SLIDE 3: FASE 02 ═══ -->
-  <div class="slide" data-slide="3">
-    <div class="slide-inner">
-      <div class="slide-badge badge-brown stagger"><i data-lucide="folder-open"></i> Fase 02</div>
-      <div class="phase-header stagger">
-        <span class="phase-num" style="color:var(--brown-400)">02</span>
-        <h2 class="phase-title" style="color:var(--brown-200)">SEPARAR MATERIAIS</h2>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 3 — FASE 02
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="3" data-orb="bronze">
+  <div class="phase-watermark" style="-webkit-text-stroke-color:rgba(180,96,48,0.05)">02</div>
+  <div class="slide-inner">
+
+    <div class="slide-badge badge-brown stagger"><i data-lucide="folder-open"></i> Fase 02</div>
+
+    <div class="phase-wrap">
+      <div class="phase-header-row stagger">
+        <h2 class="phase-title-main t-bronze">SEPARAR MATERIAIS</h2>
       </div>
+
+      <div class="orn-row stagger" style="margin-bottom:14px">
+        <div class="orn-line l" style="max-width:80px"></div>
+        <div class="orn-gem" style="color:var(--bronze-light)">◆ ◆ ◆</div>
+        <div class="orn-line r" style="max-width:80px"></div>
+      </div>
+
       <p class="phase-desc stagger">Colete os materiais que você vai recriar. Avalie a qualidade atual e encontre oportunidades de melhoria.</p>
 
       <div class="phase-items">
@@ -510,17 +1064,31 @@ i[data-lucide] svg { display: block; }
         <div class="phase-item pi-brown stagger"><i data-lucide="bar-chart-2"></i> Avaliação de Métricas</div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══ SLIDE 4: FASE 03 ═══ -->
-  <div class="slide" data-slide="4">
-    <div class="slide-inner">
-      <div class="slide-badge badge-amber stagger"><i data-lucide="cpu"></i> Fase 03</div>
-      <div class="phase-header stagger">
-        <span class="phase-num" style="color:var(--brown-300)">03</span>
-        <h2 class="phase-title" style="color:var(--brown-100)">RECRIAR COM IA</h2>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 4 — FASE 03
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="4" data-orb="bronze">
+  <div class="phase-watermark" style="-webkit-text-stroke-color:rgba(160,80,50,0.05)">03</div>
+  <div class="slide-inner">
+
+    <div class="slide-badge badge-amber stagger"><i data-lucide="cpu"></i> Fase 03</div>
+
+    <div class="phase-wrap">
+      <div class="phase-header-row stagger">
+        <h2 class="phase-title-main" style="color:var(--brown-100)">RECRIAR COM IA</h2>
       </div>
-      <p class="phase-desc stagger">Use as ferramentas de IA para recriar os materiais com qualidade profissional em tempo recorde.</p>
+
+      <div class="orn-row stagger" style="margin-bottom:14px">
+        <div class="orn-line l" style="max-width:80px"></div>
+        <div class="orn-gem" style="color:var(--brown-200)">◆ ◆ ◆</div>
+        <div class="orn-line r" style="max-width:80px"></div>
+      </div>
+
+      <p class="phase-desc stagger">Use ferramentas de IA para recriar os materiais com qualidade profissional em tempo recorde.</p>
 
       <div class="phase-items">
         <div class="phase-item pi-rust stagger"><i data-lucide="sparkles"></i> IA Gen — Geração de Imagens</div>
@@ -528,16 +1096,30 @@ i[data-lucide] svg { display: block; }
         <div class="phase-item pi-rust stagger"><i data-lucide="code-2"></i> Claude Code — Páginas & Sites</div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══ SLIDE 5: FASE 04 ═══ -->
-  <div class="slide" data-slide="5">
-    <div class="slide-inner">
-      <div class="slide-badge badge-red stagger"><i data-lucide="send"></i> Fase 04</div>
-      <div class="phase-header stagger">
-        <span class="phase-num" style="color:var(--red-soft)">04</span>
-        <h2 class="phase-title" style="color:var(--red-soft)">ABORDAR LEADS</h2>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 5 — FASE 04
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="5" data-orb="red">
+  <div class="phase-watermark" style="-webkit-text-stroke-color:rgba(255,60,60,0.04)">04</div>
+  <div class="slide-inner">
+
+    <div class="slide-badge badge-red stagger"><i data-lucide="send"></i> Fase 04</div>
+
+    <div class="phase-wrap">
+      <div class="phase-header-row stagger">
+        <h2 class="phase-title-main" style="background-image:linear-gradient(170deg,#ff9090 0%,#ff4040 25%,#cc2020 50%,#ff6060 75%,#ff4040 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">ABORDAR LEADS</h2>
       </div>
+
+      <div class="orn-row stagger" style="margin-bottom:14px">
+        <div class="orn-line l" style="max-width:80px"></div>
+        <div class="orn-gem" style="color:var(--red-soft)">◆ ◆ ◆</div>
+        <div class="orn-line r" style="max-width:80px"></div>
+      </div>
+
       <p class="phase-desc stagger">Aborde os infoprodutores com o material recriado em mãos. Entregue valor antes de pedir qualquer coisa.</p>
 
       <div class="phase-items">
@@ -546,262 +1128,370 @@ i[data-lucide] svg { display: block; }
         <div class="phase-item pi-red stagger"><i data-lucide="briefcase"></i> Portfólio — Cada material vira prova social</div>
       </div>
     </div>
+
   </div>
-
-  <!-- ═══ SLIDE 6: SCRIPT DE ABORDAGEM ═══ -->
-  <div class="slide" data-slide="6">
-    <div class="slide-inner">
-      <div class="slide-badge badge-gold stagger"><i data-lucide="message-square-text"></i> Prospecção</div>
-      <h2 class="slide-title stagger" style="font-size:clamp(36px,6vw,64px)">SCRIPT DE ABORDAGEM</h2>
-      <p class="slide-subtitle stagger">Entregue valor na primeira mensagem. Sem enrolação.</p>
-
-      <div class="script-wrapper">
-        <div class="script-strategy stagger">
-          <div class="strat-chip sc-1"><i data-lucide="bot"></i> ManyChat p/ sair da solicitação</div>
-          <div class="strat-chip sc-2"><i data-lucide="send"></i> DM direta com valor</div>
-        </div>
-
-        <div class="msg-container stagger">
-          <div class="msg-label"><i data-lucide="smartphone"></i> Modelo de Mensagem</div>
-          <div class="msg-bubble">
-            <div class="msg-bubble-icon"><i data-lucide="message-circle"></i></div>
-            Salve, Professor Kenny! Tudo certo?<br><br>
-            Estava participando de um Workshop esse final de semana, e criei um projeto utilizando o seu material como inspiração. Recriei a sua <strong>Página de Vendas</strong> e alguns <strong>criativos</strong>.<br><br>
-            Tomei a liberdade de te enviar por aqui. Segue o link da página e dos criativos.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ SLIDE 7: META DIÁRIA ═══ -->
-  <div class="slide" data-slide="7">
-    <div class="slide-inner">
-      <div class="slide-badge badge-gold stagger"><i data-lucide="target"></i> Execução</div>
-      <h2 class="slide-title stagger" style="font-size:clamp(40px,7vw,72px)">META DIÁRIA</h2>
-      <p class="slide-subtitle stagger">O mínimo que você precisa executar todo santo dia. Sem negociação.</p>
-
-      <div class="goals-grid">
-        <div class="goal-card stagger">
-          <div class="gc-icon"><i data-lucide="palette"></i></div>
-          <div class="gc-number">5</div>
-          <div class="gc-label">Materiais Recriados</div>
-          <div class="gc-sub">por dia</div>
-        </div>
-        <div class="goal-card stagger">
-          <div class="gc-icon"><i data-lucide="user-search"></i></div>
-          <div class="gc-number">5</div>
-          <div class="gc-label">Leads Prospectados</div>
-          <div class="gc-sub">por dia</div>
-        </div>
-        <div class="goal-card stagger">
-          <div class="gc-icon"><i data-lucide="camera"></i></div>
-          <div class="gc-number" style="font-size:48px;line-height:1.3">∞</div>
-          <div class="gc-label">Tudo Vira Portfólio</div>
-          <div class="gc-sub">+ conteúdo no instagram</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ SLIDE 8: RANKING CAT #1 ═══ -->
-  <div class="slide" data-slide="8">
-    <div class="cat-slide-inner">
-      <div class="slide-badge badge-gold stagger" style="margin-bottom:8px">
-        <i data-lucide="trophy"></i> Gamificação · Categoria 1 de 5
-      </div>
-      <div class="cat-icon-wrap stagger" style="background:rgba(255,200,60,0.1);border:1px solid rgba(255,200,60,0.2);color:var(--gold)">
-        <i data-lucide="mail"></i>
-      </div>
-      <h2 class="cat-title stagger" style="color:var(--gold)">QUEM PROSPECTOU<br>MAIS</h2>
-      <p class="cat-desc stagger">Mais leads abordados com material enviado e print comprovando a prospecção.</p>
-      <div class="cat-proof-row stagger">
-        <div class="cat-proof-chip" style="color:var(--gold);border-color:rgba(255,200,60,0.18);background:rgba(255,200,60,0.06)">
-          <i data-lucide="image"></i> Print do material
-        </div>
-        <div class="cat-proof-chip" style="color:var(--gold);border-color:rgba(255,200,60,0.18);background:rgba(255,200,60,0.06)">
-          <i data-lucide="send"></i> Print da DM enviada
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ SLIDE 9: RANKING CAT #2 ═══ -->
-  <div class="slide" data-slide="9">
-    <div class="cat-slide-inner">
-      <div class="slide-badge badge-brown stagger" style="margin-bottom:8px">
-        <i data-lucide="trophy"></i> Gamificação · Categoria 2 de 5
-      </div>
-      <div class="cat-icon-wrap stagger" style="background:rgba(196,104,88,0.1);border:1px solid rgba(196,104,88,0.25);color:var(--brown-300)">
-        <i data-lucide="handshake"></i>
-      </div>
-      <h2 class="cat-title stagger" style="color:var(--brown-200)">QUEM FECHOU MAIS<br>PROJETOS</h2>
-      <p class="cat-desc stagger">Mais contratos fechados com comprovação. Cada fechamento documentado conta.</p>
-      <div class="cat-proof-row stagger">
-        <div class="cat-proof-chip" style="color:var(--brown-200);border-color:rgba(196,104,88,0.2);background:rgba(196,104,88,0.06)">
-          <i data-lucide="message-circle-check"></i> Print do fechamento
-        </div>
-        <div class="cat-proof-chip" style="color:var(--brown-200);border-color:rgba(196,104,88,0.2);background:rgba(196,104,88,0.06)">
-          <i data-lucide="file-check"></i> Contrato / acordo
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ SLIDE 10: RANKING CAT #3 ═══ -->
-  <div class="slide" data-slide="10">
-    <div class="cat-slide-inner">
-      <div class="slide-badge badge-gold stagger" style="margin-bottom:8px">
-        <i data-lucide="trophy"></i> Gamificação · Categoria 3 de 5
-      </div>
-      <div class="cat-icon-wrap stagger" style="background:rgba(255,200,60,0.12);border:1px solid rgba(255,200,60,0.25);color:var(--gold)">
-        <i data-lucide="circle-dollar-sign"></i>
-      </div>
-      <h2 class="cat-title stagger" style="color:var(--gold)">QUEM FEZ MAIS<br>GRANA</h2>
-      <p class="cat-desc stagger">Maior faturamento total comprovado durante os 30 dias do desafio.</p>
-      <div class="cat-proof-row stagger">
-        <div class="cat-proof-chip" style="color:var(--gold);border-color:rgba(255,200,60,0.2);background:rgba(255,200,60,0.06)">
-          <i data-lucide="receipt"></i> Comprovante de pagamento
-        </div>
-        <div class="cat-proof-chip" style="color:var(--gold);border-color:rgba(255,200,60,0.2);background:rgba(255,200,60,0.06)">
-          <i data-lucide="trending-up"></i> Faturamento total
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ SLIDE 11: RANKING CAT #4 ═══ -->
-  <div class="slide" data-slide="11">
-    <div class="cat-slide-inner">
-      <div class="slide-badge badge-amber stagger" style="margin-bottom:8px">
-        <i data-lucide="trophy"></i> Gamificação · Categoria 4 de 5
-      </div>
-      <div class="cat-icon-wrap stagger" style="background:rgba(168,80,64,0.12);border:1px solid rgba(168,80,64,0.25);color:var(--brown-100)">
-        <i data-lucide="star"></i>
-      </div>
-      <h2 class="cat-title stagger" style="color:var(--brown-100)">MATERIAL<br>MAIS TOP</h2>
-      <p class="cat-desc stagger">O melhor material criado no desafio, eleito por votação da comunidade Forza.</p>
-      <div class="cat-proof-row stagger">
-        <div class="cat-proof-chip" style="color:var(--brown-100);border-color:rgba(168,80,64,0.25);background:rgba(168,80,64,0.07)">
-          <i data-lucide="link"></i> Link do material
-        </div>
-        <div class="cat-proof-chip" style="color:var(--brown-100);border-color:rgba(168,80,64,0.25);background:rgba(168,80,64,0.07)">
-          <i data-lucide="users"></i> Votação da comunidade
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ SLIDE 12: RANKING CAT #5 ═══ -->
-  <div class="slide" data-slide="12">
-    <div class="cat-slide-inner">
-      <div class="slide-badge badge-red stagger" style="margin-bottom:8px">
-        <i data-lucide="trophy"></i> Gamificação · Categoria 5 de 5
-      </div>
-      <div class="cat-icon-wrap stagger" style="background:rgba(255,64,64,0.1);border:1px solid rgba(255,64,64,0.22);color:var(--red-soft)">
-        <i data-lucide="smartphone"></i>
-      </div>
-      <h2 class="cat-title stagger" style="color:var(--red-soft)">MAIS CONTEÚDO<br>CRIADO</h2>
-      <p class="cat-desc stagger">Mais posts publicados no feed durante o desafio. Consistência acima de perfeição.</p>
-      <div class="cat-proof-row stagger">
-        <div class="cat-proof-chip" style="color:var(--red-soft);border-color:rgba(255,64,64,0.2);background:rgba(255,64,64,0.06)">
-          <i data-lucide="instagram"></i> Posts no feed
-        </div>
-        <div class="cat-proof-chip" style="color:var(--red-soft);border-color:rgba(255,64,64,0.2);background:rgba(255,64,64,0.06)">
-          <i data-lucide="bar-chart-2"></i> Contagem total
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ SLIDE 13: REGRAS ═══ -->
-  <div class="slide" data-slide="13">
-    <div class="slide-inner">
-      <div class="slide-badge badge-red stagger"><i data-lucide="clipboard-list"></i> Regras</div>
-      <h2 class="slide-title stagger" style="font-size:clamp(36px,6vw,64px)">REGRAS DE COMPROVAÇÃO</h2>
-      <p class="slide-subtitle stagger">Sem prova, não conta. Transparência total.</p>
-
-      <div class="rules-box">
-        <div class="rule-item stagger">
-          <div class="rule-icon ri-yes"><i data-lucide="check"></i></div>
-          <span>Material recriado para o cliente (link ou print)</span>
-        </div>
-        <div class="rule-item stagger">
-          <div class="rule-icon ri-yes"><i data-lucide="check"></i></div>
-          <span>Print da mensagem de prospecção enviada</span>
-        </div>
-        <div class="rule-item stagger">
-          <div class="rule-icon ri-yes"><i data-lucide="check"></i></div>
-          <span>Print da mensagem de fechamento do projeto</span>
-        </div>
-        <div class="rule-item stagger">
-          <div class="rule-icon ri-yes"><i data-lucide="check"></i></div>
-          <span>Comprovante de pagamento (Pix, boleto, transferência)</span>
-        </div>
-        <div class="rule-item stagger">
-          <div class="rule-icon ri-no"><i data-lucide="x"></i></div>
-          <span>NÃO vale comprovante anterior a <strong style="color:var(--red-soft)">1º de abril</strong></span>
-        </div>
-        <div class="rule-item stagger">
-          <div class="rule-icon ri-no"><i data-lucide="x"></i></div>
-          <span>NÃO vale cliente antigo — somente <strong style="color:var(--red-soft)">leads prospectados no desafio</strong></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ SLIDE 14: CTA ═══ -->
-  <div class="slide" data-slide="14">
-    <div class="slide-inner">
-      <div class="cta-icon-wrap stagger"><i data-lucide="flame"></i></div>
-      <h2 class="cta-title stagger">
-        QUEM VAI
-        <span>DOMINAR ABRIL?</span>
-      </h2>
-      <div class="ornament stagger">
-        <div class="ornament-line"></div>
-        <div class="ornament-dot"></div>
-        <div class="ornament-line"></div>
-      </div>
-      <p class="cta-sub stagger">O desafio começa agora. Sem desculpas.</p>
-    </div>
-  </div>
-
 </div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 6 — SCRIPT DE ABORDAGEM
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="6" data-orb="gold">
+  <div class="slide-inner">
+
+    <div class="slide-badge badge-gold stagger"><i data-lucide="message-square-text"></i> Prospecção</div>
+    <h2 class="slide-title stagger" style="font-size:clamp(38px,6.5vw,68px)">
+      SCRIPT DE <span class="t-gold">ABORDAGEM</span>
+    </h2>
+    <p class="slide-subtitle stagger">Entregue valor na primeira mensagem. Sem enrolação.</p>
+
+    <div class="script-wrap">
+      <div class="strat-row stagger">
+        <div class="strat-chip sc-1"><i data-lucide="bot"></i> ManyChat p/ sair da solicitação</div>
+        <div class="strat-chip sc-2"><i data-lucide="send"></i> DM direta com valor</div>
+      </div>
+
+      <div class="panel msg-panel stagger corner-frame">
+        <span class="corner-tl"></span><span class="corner-tr"></span>
+        <span class="corner-bl"></span><span class="corner-br"></span>
+        <div class="msg-header"><i data-lucide="smartphone"></i> Modelo de Mensagem</div>
+        <div class="msg-bubble">
+          <div class="msg-bubble-icon"><i data-lucide="message-circle"></i></div>
+          Salve, Professor Kenny! Tudo certo?<br><br>
+          Estava participando de um Workshop esse final de semana, e criei um projeto utilizando o seu material como inspiração. Recriei a sua <strong>Página de Vendas</strong> e alguns <strong>criativos</strong>.<br><br>
+          Tomei a liberdade de te enviar por aqui. Segue o link da página e dos criativos.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 7 — META DIÁRIA
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="7" data-orb="gold">
+  <div class="slide-inner">
+
+    <div class="slide-badge badge-gold stagger"><i data-lucide="target"></i> Execução</div>
+    <h2 class="slide-title stagger" style="font-size:clamp(42px,7vw,78px)">
+      <span class="t-gold">META</span> DIÁRIA
+    </h2>
+
+    <div class="orn-row stagger" style="margin-bottom:28px">
+      <div class="orn-line"></div>
+      <div class="orn-gem">◆ SEM NEGOCIAÇÃO ◆</div>
+      <div class="orn-line"></div>
+    </div>
+
+    <div class="goals-grid">
+      <div class="panel goal-card stagger">
+        <div class="gc-bottom-bar"></div>
+        <div class="gc-icon-wrap"><i data-lucide="palette"></i></div>
+        <div class="gc-number">5</div>
+        <div class="gc-label">Materiais Recriados</div>
+        <div class="gc-sub">por dia</div>
+      </div>
+      <div class="panel goal-card stagger">
+        <div class="gc-bottom-bar"></div>
+        <div class="gc-icon-wrap"><i data-lucide="user-search"></i></div>
+        <div class="gc-number">5</div>
+        <div class="gc-label">Leads Prospectados</div>
+        <div class="gc-sub">por dia</div>
+      </div>
+      <div class="panel goal-card stagger">
+        <div class="gc-bottom-bar"></div>
+        <div class="gc-icon-wrap"><i data-lucide="camera"></i></div>
+        <div class="gc-number" style="font-size:52px;line-height:1.2">∞</div>
+        <div class="gc-label">Tudo Vira Portfólio</div>
+        <div class="gc-sub">+ conteúdo no instagram</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 8 — RANKING CAT #1
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="8" data-orb="gold">
+  <div class="slide-inner">
+    <div class="cat-wrap">
+
+      <div class="cat-number stagger">
+        <i data-lucide="trophy" style="width:12px;height:12px;display:inline-flex;margin-right:6px"></i>
+        Gamificação &nbsp;·&nbsp; Categoria 1 de 5
+      </div>
+
+      <div class="cat-medal medal-gold stagger">
+        <div class="cat-medal-inner"><i data-lucide="mail"></i></div>
+      </div>
+
+      <div class="orn-row stagger"><div class="orn-line"></div><div class="orn-gem">◆ · ◆</div><div class="orn-line"></div></div>
+
+      <h2 class="cat-title t-gold stagger">QUEM PROSPECTOU<br>MAIS</h2>
+
+      <p class="cat-desc stagger">Mais leads abordados com material enviado e print comprovando cada prospecção.</p>
+
+      <div class="cat-chips stagger">
+        <div class="cat-chip" style="color:var(--gold);border-color:rgba(255,200,60,0.2)"><i data-lucide="image"></i> Print do material</div>
+        <div class="cat-chip" style="color:var(--gold);border-color:rgba(255,200,60,0.2)"><i data-lucide="send"></i> Print da DM enviada</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 9 — RANKING CAT #2
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="9" data-orb="bronze">
+  <div class="slide-inner">
+    <div class="cat-wrap">
+
+      <div class="cat-number stagger">
+        <i data-lucide="trophy" style="width:12px;height:12px;display:inline-flex;margin-right:6px"></i>
+        Gamificação &nbsp;·&nbsp; Categoria 2 de 5
+      </div>
+
+      <div class="cat-medal medal-bronze stagger">
+        <div class="cat-medal-inner"><i data-lucide="handshake"></i></div>
+      </div>
+
+      <div class="orn-row stagger"><div class="orn-line"></div><div class="orn-gem" style="color:var(--bronze-light)">◆ · ◆</div><div class="orn-line"></div></div>
+
+      <h2 class="cat-title t-bronze stagger">QUEM FECHOU MAIS<br>PROJETOS</h2>
+
+      <p class="cat-desc stagger">Mais contratos fechados e comprovados. Cada fechamento documentado conta para o ranking.</p>
+
+      <div class="cat-chips stagger">
+        <div class="cat-chip" style="color:var(--bronze-light);border-color:rgba(180,100,50,0.25)"><i data-lucide="message-circle-check"></i> Print do fechamento</div>
+        <div class="cat-chip" style="color:var(--bronze-light);border-color:rgba(180,100,50,0.25)"><i data-lucide="file-check"></i> Contrato / acordo</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 10 — RANKING CAT #3
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="10" data-orb="gold">
+  <div class="slide-inner">
+    <div class="cat-wrap">
+
+      <div class="cat-number stagger">
+        <i data-lucide="trophy" style="width:12px;height:12px;display:inline-flex;margin-right:6px"></i>
+        Gamificação &nbsp;·&nbsp; Categoria 3 de 5
+      </div>
+
+      <div class="cat-medal medal-gold stagger">
+        <div class="cat-medal-inner"><i data-lucide="circle-dollar-sign"></i></div>
+      </div>
+
+      <div class="orn-row stagger"><div class="orn-line"></div><div class="orn-gem">◆ · ◆</div><div class="orn-line"></div></div>
+
+      <h2 class="cat-title t-gold stagger">QUEM FEZ MAIS<br>GRANA</h2>
+
+      <p class="cat-desc stagger">Maior faturamento total comprovado durante os 30 dias do desafio. Resultado real.</p>
+
+      <div class="cat-chips stagger">
+        <div class="cat-chip" style="color:var(--gold);border-color:rgba(255,200,60,0.2)"><i data-lucide="receipt"></i> Comprovante de pagamento</div>
+        <div class="cat-chip" style="color:var(--gold);border-color:rgba(255,200,60,0.2)"><i data-lucide="trending-up"></i> Faturamento total</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 11 — RANKING CAT #4
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="11" data-orb="bronze">
+  <div class="slide-inner">
+    <div class="cat-wrap">
+
+      <div class="cat-number stagger">
+        <i data-lucide="trophy" style="width:12px;height:12px;display:inline-flex;margin-right:6px"></i>
+        Gamificação &nbsp;·&nbsp; Categoria 4 de 5
+      </div>
+
+      <div class="cat-medal medal-silver stagger">
+        <div class="cat-medal-inner"><i data-lucide="star"></i></div>
+      </div>
+
+      <div class="orn-row stagger"><div class="orn-line"></div><div class="orn-gem" style="color:var(--brown-200)">◆ · ◆</div><div class="orn-line"></div></div>
+
+      <h2 class="cat-title t-silver stagger">MATERIAL<br>MAIS TOP</h2>
+
+      <p class="cat-desc stagger">O melhor material criado no desafio, eleito por votação da comunidade Forza Club.</p>
+
+      <div class="cat-chips stagger">
+        <div class="cat-chip" style="color:var(--brown-100);border-color:rgba(180,150,100,0.25)"><i data-lucide="link"></i> Link do material</div>
+        <div class="cat-chip" style="color:var(--brown-100);border-color:rgba(180,150,100,0.25)"><i data-lucide="users"></i> Votação da comunidade</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 12 — RANKING CAT #5
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="12" data-orb="red">
+  <div class="slide-inner">
+    <div class="cat-wrap">
+
+      <div class="cat-number stagger">
+        <i data-lucide="trophy" style="width:12px;height:12px;display:inline-flex;margin-right:6px"></i>
+        Gamificação &nbsp;·&nbsp; Categoria 5 de 5
+      </div>
+
+      <div class="cat-medal medal-red stagger">
+        <div class="cat-medal-inner"><i data-lucide="smartphone"></i></div>
+      </div>
+
+      <div class="orn-row stagger"><div class="orn-line"></div><div class="orn-gem" style="color:var(--red-soft)">◆ · ◆</div><div class="orn-line"></div></div>
+
+      <h2 class="cat-title stagger" style="background-image:linear-gradient(170deg,#ff9090 0%,#ff4040 25%,#cc2020 50%,#ff6060 75%,#ff4040 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">MAIS CONTEÚDO<br>CRIADO</h2>
+
+      <p class="cat-desc stagger">Mais posts publicados no feed durante o desafio. Consistência acima de perfeição.</p>
+
+      <div class="cat-chips stagger">
+        <div class="cat-chip" style="color:var(--red-soft);border-color:rgba(255,80,80,0.22)"><i data-lucide="instagram"></i> Posts no feed</div>
+        <div class="cat-chip" style="color:var(--red-soft);border-color:rgba(255,80,80,0.22)"><i data-lucide="bar-chart-2"></i> Contagem total</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 13 — REGRAS
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="13" data-orb="red">
+  <div class="slide-inner">
+
+    <div class="slide-badge badge-red stagger"><i data-lucide="clipboard-list"></i> Regras</div>
+    <h2 class="slide-title stagger" style="font-size:clamp(36px,6vw,64px)">
+      REGRAS DE <span style="background-image:linear-gradient(170deg,#ff9090,#ff4040,#cc2020,#ff6060,#ff4040);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">COMPROVAÇÃO</span>
+    </h2>
+
+    <div class="orn-row stagger" style="margin-bottom:24px">
+      <div class="orn-line"></div>
+      <div class="orn-gem" style="color:var(--red-soft)">◆ SEM PROVA, NÃO CONTA ◆</div>
+      <div class="orn-line"></div>
+    </div>
+
+    <div class="panel rules-box stagger corner-frame">
+      <span class="corner-tl"></span><span class="corner-tr"></span>
+      <span class="corner-bl"></span><span class="corner-br"></span>
+      <div class="rules-left-bar"></div>
+
+      <div class="rule-item">
+        <div class="rule-icon ri-yes"><i data-lucide="check"></i></div>
+        <span>Material recriado para o cliente (link ou print)</span>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon ri-yes"><i data-lucide="check"></i></div>
+        <span>Print da mensagem de prospecção enviada</span>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon ri-yes"><i data-lucide="check"></i></div>
+        <span>Print da mensagem de fechamento do projeto</span>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon ri-yes"><i data-lucide="check"></i></div>
+        <span>Comprovante de pagamento (Pix, boleto, transferência)</span>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon ri-no"><i data-lucide="x"></i></div>
+        <span>NÃO vale comprovante anterior a <strong style="color:var(--red-soft)">1º de abril</strong></span>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon ri-no"><i data-lucide="x"></i></div>
+        <span>NÃO vale cliente antigo — somente <strong style="color:var(--red-soft)">leads prospectados no desafio</strong></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  SLIDE 14 — CTA
+═══════════════════════════════════════ -->
+<div class="slide" data-slide="14" data-orb="gold">
+  <div class="cta-glow"></div>
+  <div class="slide-inner" style="position:relative;z-index:1">
+
+    <div class="orn-row stagger">
+      <div class="orn-line"></div>
+      <div class="orn-gem">✦ · ✦ · ✦ · ✦ · ✦</div>
+      <div class="orn-line"></div>
+    </div>
+
+    <div class="cta-icon stagger"><i data-lucide="flame"></i></div>
+
+    <h2 class="cta-main stagger">
+      <span class="line-1">QUEM VAI</span>
+      <span class="line-2">DOMINAR ABRIL?</span>
+    </h2>
+
+    <div class="orn-row stagger" style="margin:14px 0">
+      <div class="orn-line"></div>
+      <div class="orn-gem">◆ ◆ ◆</div>
+      <div class="orn-line"></div>
+    </div>
+
+    <p class="cta-line stagger">O desafio começa agora &nbsp;·&nbsp; Sem desculpas</p>
+
+  </div>
+</div>
+
+</div><!-- /slides-wrapper -->
 
 <!-- NAV BAR -->
 <div class="nav-bar">
-  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  <button class="nav-btn" onclick="changeSlide(-1)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
   </button>
   <div class="nav-dots" id="navDots"></div>
-  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  <button class="nav-btn" onclick="changeSlide(1)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
   </button>
   <div class="nav-counter" id="navCounter">1 / 15</div>
 </div>
 
 <script>
-  let currentSlide = 0;
-  const slides = document.querySelectorAll('.slide');
-  const totalSlides = slides.length;
-  const dotsContainer = document.getElementById('navDots');
-  const counter = document.getElementById('navCounter');
+  const ORB_CLASSES = ['scene-orb-gold','scene-orb-red','scene-orb-bronze','scene-orb-dark'];
+  const ORB_MAP = { gold: 'scene-orb-gold', red: 'scene-orb-red', bronze: 'scene-orb-bronze', dark: 'scene-orb-dark' };
 
-  for (let i = 0; i < totalSlides; i++) {
-    const dot = document.createElement('button');
-    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
-    dot.onclick = () => goToSlide(i);
-    dotsContainer.appendChild(dot);
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const dots = document.getElementById('navDots');
+  const counter = document.getElementById('navCounter');
+  const orb = document.getElementById('sceneOrb');
+
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('button');
+    d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dots.appendChild(d);
   }
 
-  function goToSlide(n) {
-    if (n === currentSlide || n < 0 || n >= totalSlides) return;
-    const direction = n > currentSlide ? 'left' : 'right';
+  function setOrb(slide) {
+    const key = slide.dataset.orb || 'dark';
+    ORB_CLASSES.forEach(c => orb.classList.remove(c));
+    orb.classList.add(ORB_MAP[key] || 'scene-orb-dark');
+  }
 
-    slides[currentSlide].classList.remove('active');
-    slides[currentSlide].classList.add('exit-' + direction);
-    setTimeout(() => slides[currentSlide].classList.remove('exit-' + direction), 500);
+  function goTo(n) {
+    if (n === current || n < 0 || n >= total) return;
+    const dir = n > current ? 'left' : 'right';
+
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit-' + dir);
+    setTimeout(() => slides[current].classList.remove('exit-' + dir), 550);
 
     slides[n].querySelectorAll('.stagger').forEach(el => {
       el.style.animation = 'none';
@@ -809,35 +1499,33 @@ i[data-lucide] svg { display: block; }
       el.style.animation = '';
     });
 
-    currentSlide = n;
-    slides[currentSlide].classList.add('active');
+    current = n;
+    slides[current].classList.add('active');
+    setOrb(slides[current]);
 
     document.querySelectorAll('.nav-dot').forEach((d, i) => {
-      d.className = 'nav-dot' + (i === currentSlide ? ' active' : '');
+      d.className = 'nav-dot' + (i === current ? ' active' : '');
     });
-
-    counter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+    counter.textContent = (current + 1) + ' / ' + total;
   }
 
-  function changeSlide(delta) {
-    const next = currentSlide + delta;
-    if (next >= 0 && next < totalSlides) goToSlide(next);
-  }
+  function changeSlide(d) { goTo(current + d); }
 
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
     if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); changeSlide(-1); }
   });
 
-  let touchStartX = 0;
-  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
   document.addEventListener('touchend',   e => {
-    const diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1);
+    const d = tx - e.changedTouches[0].clientX;
+    if (Math.abs(d) > 48) changeSlide(d > 0 ? 1 : -1);
   });
 
-  // Init Lucide icons
+  // init icons + set first orb
   lucide.createIcons();
+  setOrb(slides[0]);
 </script>
 </body>
 </html>
