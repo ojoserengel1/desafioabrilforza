@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafio Mentoria Paga em 30 Dias — Apresentação</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #07070c;
+    --bg-card: #101018;
+    --bg-card-hover: #16162a;
+    --accent-gold: #f0c040;
+    --accent-gold-dim: #b8941f;
+    --accent-cyan: #00e5ff;
+    --accent-magenta: #ff2d7b;
+    --accent-green: #39ff14;
+    --accent-purple: #b44dff;
+    --accent-orange: #ff8c21;
+    --text-primary: #eaeaf0;
+    --text-secondary: #7878a0;
+    --border-subtle: rgba(255,255,255,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  /* ─── GRID BG ─── */
+  .grid-bg {
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 70px 70px;
+    z-index: 0;
+  }
+
+  /* Ambient glow */
+  .ambient {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  }
+  .ambient .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.12;
+  }
+  .ambient .orb-1 { width: 500px; height: 500px; background: var(--accent-magenta); top: -10%; right: -5%; }
+  .ambient .orb-2 { width: 400px; height: 400px; background: var(--accent-cyan); bottom: -10%; left: -5%; }
+
+  /* ─── SLIDE ENGINE ─── */
+  .slides-wrapper {
+    position: relative;
+    width: 100%; height: 100%;
+    z-index: 1;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 40px;
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.4,0,.2,1);
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+  }
+
+  .slide.exit-left {
+    opacity: 0;
+    transform: scale(0.92) translateX(-60px);
+  }
+
+  .slide.exit-right {
+    opacity: 0;
+    transform: scale(0.92) translateX(60px);
+  }
+
+  .slide-inner {
+    max-width: 1100px;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* ─── NAVIGATION ─── */
+  .nav-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 24px;
+    background: linear-gradient(0deg, rgba(7,7,12,0.95), rgba(7,7,12,0.6), transparent);
+  }
+
+  .nav-btn {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: var(--text-secondary);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.08); color: #fff; border-color: rgba(255,255,255,0.2); }
+  .nav-btn:active { transform: scale(0.93); }
+
+  .nav-dots {
+    display: flex; gap: 6px; align-items: center;
+  }
+
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+  }
+  .nav-dot.active {
+    width: 28px;
+    border-radius: 4px;
+    background: var(--accent-gold);
+    box-shadow: 0 0 12px rgba(240,192,64,0.4);
+  }
+
+  .nav-counter {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ─── SLIDE TYPOGRAPHY ─── */
+  .slide-badge {
+    display: inline-block;
+    padding: 5px 18px;
+    border-radius: 100px;
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .badge-gold { background: rgba(240,192,64,0.1); border: 1px solid rgba(240,192,64,0.25); color: var(--accent-gold); }
+  .badge-cyan { background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); color: var(--accent-cyan); }
+  .badge-purple { background: rgba(180,77,255,0.1); border: 1px solid rgba(180,77,255,0.2); color: var(--accent-purple); }
+  .badge-green { background: rgba(57,255,20,0.1); border: 1px solid rgba(57,255,20,0.2); color: var(--accent-green); }
+  .badge-magenta { background: rgba(255,45,123,0.1); border: 1px solid rgba(255,45,123,0.2); color: var(--accent-magenta); }
+  .badge-orange { background: rgba(255,140,33,0.1); border: 1px solid rgba(255,140,33,0.2); color: var(--accent-orange); }
+
+  .slide-title {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 3px;
+    line-height: 0.95;
+    margin-bottom: 16px;
+  }
+
+  .slide-subtitle {
+    font-size: 17px;
+    color: var(--text-secondary);
+    max-width: 560px;
+    margin: 0 auto 36px;
+    line-height: 1.5;
+  }
+
+  /* ─── HERO SLIDE ─── */
+  .hero-title {
+    font-size: clamp(56px, 10vw, 110px);
+    background: linear-gradient(180deg, #ffffff 0%, #f0c040 50%, #ff2d7b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 50px rgba(240,192,64,0.2));
+  }
+
+  .hero-value-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, rgba(240,192,64,0.08), rgba(240,192,64,0.02));
+    border: 1px solid rgba(240,192,64,0.2);
+    padding: 18px 44px;
+    border-radius: 14px;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-value-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(240,192,64,0.1), transparent);
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer { 0% { left: -100%; } 100% { left: 100%; } }
+
+  .hv-currency {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    color: var(--accent-gold-dim);
+    letter-spacing: 2px;
+  }
+
+  .hv-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 60px;
+    color: var(--accent-gold);
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(240,192,64,0.4);
+  }
+
+  .hero-or {
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+  }
+  .hero-or strong { color: var(--accent-cyan); }
+
+  .hero-timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    padding: 12px 28px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+  }
+
+  .hero-timer .t-days {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--accent-magenta);
+    line-height: 1;
+  }
+
+  .hero-timer .t-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+
+  /* ─── PHASE SLIDES ─── */
+  .phase-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+
+  .phase-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 60px;
+    font-weight: 800;
+    line-height: 1;
+    opacity: 0.12;
+  }
+
+  .phase-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 7vw, 72px);
+    letter-spacing: 3px;
+  }
+
+  .phase-desc {
+    font-size: 17px;
+    color: var(--text-secondary);
+    max-width: 560px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+
+  .phase-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .phase-item {
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s;
+  }
+  .phase-item:hover { transform: translateY(-2px); }
+
+  .pi-cyan { background: rgba(0,229,255,0.07); border: 1px solid rgba(0,229,255,0.18); color: var(--accent-cyan); }
+  .pi-purple { background: rgba(180,77,255,0.07); border: 1px solid rgba(180,77,255,0.18); color: var(--accent-purple); }
+  .pi-green { background: rgba(57,255,20,0.07); border: 1px solid rgba(57,255,20,0.18); color: var(--accent-green); }
+  .pi-magenta { background: rgba(255,45,123,0.07); border: 1px solid rgba(255,45,123,0.18); color: var(--accent-magenta); }
+  .pi-gold { background: rgba(240,192,64,0.07); border: 1px solid rgba(240,192,64,0.18); color: var(--accent-gold); }
+
+  /* ─── GOALS SLIDE ─── */
+  .goals-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .goal-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 18px;
+    padding: 36px 24px;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .goal-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.1); }
+
+  .goal-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .goal-card:nth-child(1)::after { background: linear-gradient(90deg, var(--accent-cyan), transparent); }
+  .goal-card:nth-child(2)::after { background: linear-gradient(90deg, var(--accent-magenta), transparent); }
+  .goal-card:nth-child(3)::after { background: linear-gradient(90deg, var(--accent-gold), transparent); }
+
+  .gc-emoji { font-size: 44px; margin-bottom: 14px; display: block; }
+  .gc-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--accent-gold);
+    text-shadow: 0 0 25px rgba(240,192,64,0.3);
+  }
+  .gc-label { font-size: 16px; color: var(--text-secondary); margin-top: 6px; font-weight: 600; }
+  .gc-sub {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    margin-top: 10px;
+  }
+
+  /* ─── RANKING SLIDE ─── */
+  .ranking-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    max-width: 1050px;
+    margin: 0 auto;
+  }
+
+  .rank-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 28px 16px;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .rank-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.1); }
+
+  .rank-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .rank-card:nth-child(1)::before { background: var(--accent-cyan); }
+  .rank-card:nth-child(2)::before { background: var(--accent-green); }
+  .rank-card:nth-child(3)::before { background: var(--accent-gold); }
+  .rank-card:nth-child(4)::before { background: var(--accent-purple); }
+  .rank-card:nth-child(5)::before { background: var(--accent-magenta); }
+
+  .rc-pos {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .rank-card:nth-child(1) .rc-pos { color: var(--accent-cyan); }
+  .rank-card:nth-child(2) .rc-pos { color: var(--accent-green); }
+  .rank-card:nth-child(3) .rc-pos { color: var(--accent-gold); }
+  .rank-card:nth-child(4) .rc-pos { color: var(--accent-purple); }
+  .rank-card:nth-child(5) .rc-pos { color: var(--accent-magenta); }
+
+  .rc-emoji { font-size: 38px; margin-bottom: 12px; display: block; }
+  .rc-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+  .rc-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+
+  /* ─── SCRIPT SLIDE ─── */
+  .script-wrapper {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .script-strategy {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    justify-content: center;
+  }
+
+  .strat-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .sc-1 { background: rgba(180,77,255,0.08); border: 1px solid rgba(180,77,255,0.2); color: var(--accent-purple); }
+  .sc-2 { background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.2); color: var(--accent-cyan); }
+
+  .msg-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 36px 32px;
+    position: relative;
+  }
+
+  .msg-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .msg-bubble {
+    background: rgba(0,229,255,0.04);
+    border: 1px solid rgba(0,229,255,0.1);
+    border-radius: 0 18px 18px 18px;
+    padding: 24px 28px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text-primary);
+    position: relative;
+  }
+
+  .msg-bubble::before {
+    content: '💬';
+    position: absolute;
+    top: -14px;
+    left: -6px;
+    font-size: 22px;
+  }
+
+  .msg-bubble strong {
+    color: var(--accent-cyan);
+  }
+
+  /* ─── RULES SLIDE ─── */
+  .rules-box {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: left;
+    background: linear-gradient(135deg, rgba(255,45,123,0.04), rgba(240,192,64,0.02));
+    border: 1px solid rgba(255,45,123,0.12);
+    border-radius: 20px;
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rules-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, var(--accent-magenta), var(--accent-gold));
+    border-radius: 4px 0 0 4px;
+  }
+
+  .rule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    font-size: 17px;
+    line-height: 1.5;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .rule-item:last-child { border-bottom: none; }
+
+  .rule-icon {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    margin-top: 2px;
+  }
+
+  .ri-yes { background: rgba(57,255,20,0.1); border: 1px solid rgba(57,255,20,0.2); color: var(--accent-green); }
+  .ri-no { background: rgba(255,45,123,0.1); border: 1px solid rgba(255,45,123,0.2); color: var(--accent-magenta); }
+
+  /* ─── CTA SLIDE ─── */
+  .cta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 9vw, 100px);
+    letter-spacing: 4px;
+    background: linear-gradient(180deg, #fff, var(--accent-gold), var(--accent-magenta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 40px rgba(240,192,64,0.2));
+    line-height: 0.95;
+    margin-bottom: 20px;
+  }
+
+  .cta-sub {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  .cta-flame {
+    font-size: 64px;
+    margin-bottom: 20px;
+    display: block;
+    animation: flame 1.5s ease-in-out infinite;
+  }
+
+  @keyframes flame {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
+
+  /* ─── STAGGER ANIMATIONS ─── */
+  .slide.active .stagger { animation: staggerIn 0.5s ease forwards; opacity: 0; transform: translateY(16px); }
+  .slide.active .stagger:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active .stagger:nth-child(2) { animation-delay: 0.12s; }
+  .slide.active .stagger:nth-child(3) { animation-delay: 0.19s; }
+  .slide.active .stagger:nth-child(4) { animation-delay: 0.26s; }
+  .slide.active .stagger:nth-child(5) { animation-delay: 0.33s; }
+  .slide.active .stagger:nth-child(6) { animation-delay: 0.40s; }
+  .slide.active .stagger:nth-child(7) { animation-delay: 0.47s; }
+  .slide.active .stagger:nth-child(8) { animation-delay: 0.54s; }
+
+  @keyframes staggerIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .ranking-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 700px) {
+    .slide { padding: 32px 20px 80px; }
+    .goals-grid { grid-template-columns: 1fr; max-width: 280px; }
+    .ranking-grid { grid-template-columns: 1fr 1fr; }
+    .phase-items { flex-direction: column; align-items: center; }
+    .script-strategy { flex-direction: column; align-items: center; }
+    .rules-box { padding: 24px 20px; }
+    .msg-container { padding: 24px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="ambient">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+</div>
+
+<div class="slides-wrapper" id="slidesWrapper">
+
+  <!-- ═══ SLIDE 0: COVER ═══ -->
+  <div class="slide active" data-slide="0">
+    <div class="slide-inner">
+      <div class="slide-badge badge-gold stagger">⚡ Desafio do Mês — Abril 2026</div>
+      <h1 class="slide-title hero-title stagger">MENTORIA PAGA<br>EM 30 DIAS</h1>
+      <p class="slide-subtitle stagger" style="font-family:'Orbitron',monospace;font-size:13px;letter-spacing:5px;text-transform:uppercase;">O jogo começa agora</p>
+
+      <div class="hero-value-box stagger">
+        <div>
+          <span class="hv-currency">META MÍNIMA</span>
+          <div class="hv-amount">R$ 1.997</div>
+        </div>
+      </div>
+      <div class="hero-or stagger">ou <strong>2 projetos de R$ 997</strong></div>
+
+      <div class="hero-timer stagger">
+        <span style="font-size:20px;">⏱️</span>
+        <span class="t-label">Prazo</span>
+        <span class="t-days">30</span>
+        <span style="font-size:14px;color:var(--text-secondary);">dias</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 1: ROADMAP OVERVIEW ═══ -->
+  <div class="slide" data-slide="1">
+    <div class="slide-inner">
+      <div class="slide-badge badge-cyan stagger">🗺️ Visão Geral</div>
+      <h2 class="slide-title stagger" style="font-size:clamp(40px,7vw,72px);">ROADMAP DA MISSÃO</h2>
+      <p class="slide-subtitle stagger">4 fases para conquistar seu primeiro (ou próximo) cliente pago.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:900px;margin:0 auto;">
+        <div class="stagger" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:16px;padding:28px 16px;text-align:center;border-top:3px solid var(--accent-cyan);">
+          <div style="font-family:'Orbitron',monospace;font-size:28px;font-weight:800;color:var(--accent-cyan);opacity:0.3;">01</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-top:8px;">BIBLIOTECA<br>DE ANÚNCIOS</div>
+        </div>
+        <div class="stagger" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:16px;padding:28px 16px;text-align:center;border-top:3px solid var(--accent-purple);">
+          <div style="font-family:'Orbitron',monospace;font-size:28px;font-weight:800;color:var(--accent-purple);opacity:0.3;">02</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-top:8px;">SEPARAR<br>MATERIAIS</div>
+        </div>
+        <div class="stagger" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:16px;padding:28px 16px;text-align:center;border-top:3px solid var(--accent-green);">
+          <div style="font-family:'Orbitron',monospace;font-size:28px;font-weight:800;color:var(--accent-green);opacity:0.3;">03</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-top:8px;">RECRIAR<br>COM IA</div>
+        </div>
+        <div class="stagger" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:16px;padding:28px 16px;text-align:center;border-top:3px solid var(--accent-magenta);">
+          <div style="font-family:'Orbitron',monospace;font-size:28px;font-weight:800;color:var(--accent-magenta);opacity:0.3;">04</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-top:8px;">ABORDAR<br>LEADS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 2: FASE 01 ═══ -->
+  <div class="slide" data-slide="2">
+    <div class="slide-inner">
+      <div class="slide-badge badge-cyan stagger">Fase 01</div>
+      <div class="phase-header stagger">
+        <span class="phase-num" style="color:var(--accent-cyan);">01</span>
+        <h2 class="phase-title" style="color:var(--accent-cyan);">BIBLIOTECA DE ANÚNCIOS</h2>
+      </div>
+      <p class="phase-desc stagger">Pesquise na Biblioteca de Anúncios do Meta por infoprodutores que estão rodando tráfego. Esses são seus potenciais clientes.</p>
+
+      <div class="phase-items">
+        <div class="phase-item pi-cyan stagger">🎓 Aula Gratuita</div>
+        <div class="phase-item pi-cyan stagger">🎤 Evento Gratuito</div>
+        <div class="phase-item pi-cyan stagger">📦 Infoproduto</div>
+        <div class="phase-item pi-cyan stagger">🔥 Hotmart</div>
+        <div class="phase-item pi-cyan stagger">💻 Curso Online</div>
+        <div class="phase-item pi-cyan stagger">▶️ Aula Grátis</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 3: FASE 02 ═══ -->
+  <div class="slide" data-slide="3">
+    <div class="slide-inner">
+      <div class="slide-badge badge-purple stagger">Fase 02</div>
+      <div class="phase-header stagger">
+        <span class="phase-num" style="color:var(--accent-purple);">02</span>
+        <h2 class="phase-title" style="color:var(--accent-purple);">SEPARAR MATERIAIS</h2>
+      </div>
+      <p class="phase-desc stagger">Colete os materiais que você vai recriar. Avalie a qualidade atual e encontre oportunidades de melhoria.</p>
+
+      <div class="phase-items">
+        <div class="phase-item pi-purple stagger">🌐 Landing Pages</div>
+        <div class="phase-item pi-purple stagger">🎨 Criativos</div>
+        <div class="phase-item pi-purple stagger">📊 PageSpeed Audit</div>
+        <div class="phase-item pi-purple stagger">📈 Avaliação de Métricas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 4: FASE 03 ═══ -->
+  <div class="slide" data-slide="4">
+    <div class="slide-inner">
+      <div class="slide-badge badge-green stagger">Fase 03</div>
+      <div class="phase-header stagger">
+        <span class="phase-num" style="color:var(--accent-green);">03</span>
+        <h2 class="phase-title" style="color:var(--accent-green);">RECRIAR COM IA</h2>
+      </div>
+      <p class="phase-desc stagger">Use as ferramentas de IA para recriar os materiais com qualidade profissional em tempo recorde.</p>
+
+      <div class="phase-items">
+        <div class="phase-item pi-green stagger">🤖 IA Gen — Geração de Imagens</div>
+        <div class="phase-item pi-green stagger">🎨 Figma Make — Layout Profissional</div>
+        <div class="phase-item pi-green stagger">💻 Claude Code — Páginas & Sites</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 5: FASE 04 ═══ -->
+  <div class="slide" data-slide="5">
+    <div class="slide-inner">
+      <div class="slide-badge badge-magenta stagger">Fase 04</div>
+      <div class="phase-header stagger">
+        <span class="phase-num" style="color:var(--accent-magenta);">04</span>
+        <h2 class="phase-title" style="color:var(--accent-magenta);">ABORDAR LEADS</h2>
+      </div>
+      <p class="phase-desc stagger">Aborde os infoprodutores com o material recriado em mãos. Entregue valor antes de pedir qualquer coisa.</p>
+
+      <div class="phase-items">
+        <div class="phase-item pi-magenta stagger">🤖 ManyChat — Sair da Caixa de Solicitação</div>
+        <div class="phase-item pi-magenta stagger">📩 DM Estratégica — Script Pronto</div>
+        <div class="phase-item pi-magenta stagger">📁 Portfólio — Cada material vira prova social</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 6: META DIÁRIA ═══ -->
+  <div class="slide" data-slide="6">
+    <div class="slide-inner">
+      <div class="slide-badge badge-gold stagger">🎯 Execução</div>
+      <h2 class="slide-title stagger" style="font-size:clamp(40px,7vw,72px);">META DIÁRIA</h2>
+      <p class="slide-subtitle stagger">O mínimo que você precisa executar todo santo dia. Sem negociação.</p>
+
+      <div class="goals-grid">
+        <div class="goal-card stagger">
+          <span class="gc-emoji">🎨</span>
+          <div class="gc-number">10</div>
+          <div class="gc-label">Materiais Recriados</div>
+          <div class="gc-sub">por dia</div>
+        </div>
+        <div class="goal-card stagger">
+          <span class="gc-emoji">📩</span>
+          <div class="gc-number">10</div>
+          <div class="gc-label">Leads Prospectados</div>
+          <div class="gc-sub">por dia</div>
+        </div>
+        <div class="goal-card stagger">
+          <span class="gc-emoji">📸</span>
+          <div class="gc-number">∞</div>
+          <div class="gc-label">Tudo Vira Portfólio</div>
+          <div class="gc-sub">+ conteúdo no instagram</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 7: RANKING ═══ -->
+  <div class="slide" data-slide="7">
+    <div class="slide-inner">
+      <div class="slide-badge badge-gold stagger">🏆 Gamificação</div>
+      <h2 class="slide-title stagger" style="font-size:clamp(36px,6vw,64px);">RANKING — 5 CATEGORIAS</h2>
+      <p class="slide-subtitle stagger">Cada categoria tem seu vencedor. Domine todas ou seja o melhor em uma.</p>
+
+      <div class="ranking-grid">
+        <div class="rank-card stagger">
+          <div class="rc-pos">Categoria #1</div>
+          <span class="rc-emoji">📨</span>
+          <div class="rc-title">QUEM PROSPECTOU MAIS</div>
+          <div class="rc-desc">Mais leads abordados com material + print</div>
+        </div>
+        <div class="rank-card stagger">
+          <div class="rc-pos">Categoria #2</div>
+          <span class="rc-emoji">🤝</span>
+          <div class="rc-title">QUEM FECHOU MAIS PROJETOS</div>
+          <div class="rc-desc">Mais contratos comprovados</div>
+        </div>
+        <div class="rank-card stagger">
+          <div class="rc-pos">Categoria #3</div>
+          <span class="rc-emoji">💰</span>
+          <div class="rc-title">QUEM FEZ MAIS GRANA</div>
+          <div class="rc-desc">Maior faturamento total</div>
+        </div>
+        <div class="rank-card stagger">
+          <div class="rc-pos">Categoria #4</div>
+          <span class="rc-emoji">🎨</span>
+          <div class="rc-title">MATERIAL MAIS TOP</div>
+          <div class="rc-desc">Votação da comunidade</div>
+        </div>
+        <div class="rank-card stagger">
+          <div class="rc-pos">Categoria #5</div>
+          <span class="rc-emoji">📱</span>
+          <div class="rc-title">MAIS CONTEÚDO CRIADO</div>
+          <div class="rc-desc">Mais posts no feed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 8: SCRIPT ═══ -->
+  <div class="slide" data-slide="8">
+    <div class="slide-inner">
+      <div class="slide-badge badge-cyan stagger">💬 Prospecção</div>
+      <h2 class="slide-title stagger" style="font-size:clamp(36px,6vw,64px);">SCRIPT DE ABORDAGEM</h2>
+      <p class="slide-subtitle stagger">Entregue valor na primeira mensagem. Sem enrolação.</p>
+
+      <div class="script-wrapper">
+        <div class="script-strategy stagger">
+          <div class="strat-chip sc-1">🤖 ManyChat p/ sair da solicitação</div>
+          <div class="strat-chip sc-2">📩 DM direta com valor</div>
+        </div>
+
+        <div class="msg-container stagger">
+          <div class="msg-label">📲 Modelo de Mensagem</div>
+          <div class="msg-bubble">
+            Salve, Professor Kenny! Tudo certo?<br><br>
+            Estava participando de um Workshop esse final de semana, e criei um projeto utilizando o seu material como inspiração. Recriei a sua <strong>Página de Vendas</strong> e alguns <strong>criativos</strong>.<br><br>
+            Tomei a liberdade de te enviar por aqui. Segue o link da página e dos criativos. 👇
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 9: RULES ═══ -->
+  <div class="slide" data-slide="9">
+    <div class="slide-inner">
+      <div class="slide-badge badge-magenta stagger">📋 Regras</div>
+      <h2 class="slide-title stagger" style="font-size:clamp(36px,6vw,64px);">REGRAS DE COMPROVAÇÃO</h2>
+      <p class="slide-subtitle stagger">Sem prova, não conta. Transparência total.</p>
+
+      <div class="rules-box">
+        <div class="rule-item stagger">
+          <div class="rule-icon ri-yes">✓</div>
+          <span>Material recriado para o cliente (link ou print)</span>
+        </div>
+        <div class="rule-item stagger">
+          <div class="rule-icon ri-yes">✓</div>
+          <span>Print da mensagem de prospecção enviada</span>
+        </div>
+        <div class="rule-item stagger">
+          <div class="rule-icon ri-yes">✓</div>
+          <span>Print da mensagem de fechamento do projeto</span>
+        </div>
+        <div class="rule-item stagger">
+          <div class="rule-icon ri-yes">✓</div>
+          <span>Comprovante de pagamento (Pix, boleto, transferência)</span>
+        </div>
+        <div class="rule-item stagger">
+          <div class="rule-icon ri-no">✗</div>
+          <span>NÃO vale comprovante anterior a <strong style="color:var(--accent-magenta)">1º de abril</strong></span>
+        </div>
+        <div class="rule-item stagger">
+          <div class="rule-icon ri-no">✗</div>
+          <span>NÃO vale cliente antigo — somente <strong style="color:var(--accent-magenta)">leads prospectados no desafio</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 10: CTA ═══ -->
+  <div class="slide" data-slide="10">
+    <div class="slide-inner">
+      <span class="cta-flame stagger">🔥</span>
+      <h2 class="cta-title stagger">QUEM VAI<br>DOMINAR ABRIL?</h2>
+      <p class="cta-sub stagger">O desafio começa agora. Sem desculpas.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAV BAR -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+  <div class="nav-dots" id="navDots"></div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">▶</button>
+  <div class="nav-counter" id="navCounter">1 / 11</div>
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  const dotsContainer = document.getElementById('navDots');
+  const counter = document.getElementById('navCounter');
+
+  // Create dots
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goToSlide(i);
+    dotsContainer.appendChild(dot);
+  }
+
+  function goToSlide(n) {
+    if (n === currentSlide || n < 0 || n >= totalSlides) return;
+    const direction = n > currentSlide ? 'left' : 'right';
+
+    slides[currentSlide].classList.remove('active');
+    slides[currentSlide].classList.add('exit-' + direction);
+    setTimeout(() => slides[currentSlide].classList.remove('exit-' + direction), 500);
+
+    // Reset stagger animations
+    slides[n].querySelectorAll('.stagger').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight; // reflow
+      el.style.animation = '';
+    });
+
+    currentSlide = n;
+    slides[currentSlide].classList.add('active');
+
+    // Update dots
+    document.querySelectorAll('.nav-dot').forEach((d, i) => {
+      d.className = 'nav-dot' + (i === currentSlide ? ' active' : '');
+    });
+
+    counter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+  }
+
+  function changeSlide(delta) {
+    const next = currentSlide + delta;
+    if (next >= 0 && next < totalSlides) goToSlide(next);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      changeSlide(1);
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      changeSlide(-1);
+    }
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1);
+  });
+</script>
+
+</body>
+</html>
