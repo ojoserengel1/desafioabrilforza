@@ -1500,20 +1500,29 @@ i[data-lucide] svg { display: block; }
     slides[current].classList.add('exit-' + dir);
     setTimeout(() => slides[current].classList.remove('exit-' + dir), 550);
 
-    // 1. Freeze target elements before adding active
+    // Pin elements invisible via inline style (overrides any CSS, any fill-mode)
     const targets = slides[n].querySelectorAll('.stagger');
-    targets.forEach(el => el.classList.add('no-anim'));
+    targets.forEach(el => {
+      el.style.animation = 'none';
+      el.style.opacity   = '0';
+      el.style.transform = 'translateY(16px)';
+    });
 
-    // 2. Activate slide (no-anim still blocks animation)
     current = n;
     slides[current].classList.add('active');
     setOrb(slides[current]);
 
-    // 3. Force a full reflow on the slide so the browser registers the state
-    void slides[current].offsetHeight;
-
-    // 4. Remove no-anim — browser now sees a fresh animation start
-    targets.forEach(el => el.classList.remove('no-anim'));
+    // Double-rAF: first frame commits the "none" paint,
+    // second frame releases inline → CSS animation starts fresh
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        targets.forEach(el => {
+          el.style.animation = '';
+          el.style.opacity   = '';
+          el.style.transform = '';
+        });
+      });
+    });
 
     document.querySelectorAll('.nav-dot').forEach((d, i) => {
       d.className = 'nav-dot' + (i === current ? ' active' : '');
